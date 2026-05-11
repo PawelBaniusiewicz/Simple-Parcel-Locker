@@ -1,9 +1,11 @@
 import './index.css'
+import TopBar from './components/TopBar/TopBar'
 
 function App() {
 
   return (
     <>
+      <TopBar />
     </>
   )
 }
