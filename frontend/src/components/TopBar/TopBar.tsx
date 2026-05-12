@@ -10,7 +10,7 @@ export default function TopBar(){
                     <Link to={route.MY_PACKAGES}>My packages</Link>
                 </div>
                 <div className="hidden md:block md:w-[20vw] lg:w-[20vw]">
-                    <Link to={route.ORDER_PACKAGE}>Pick up your packages</Link>
+                    <Link to={route.PICK_UP_PACKAGE}>Pick up your packages</Link>
                 </div>
                 <div className="w-[20vw] md:w-[10vw] lg:w-[10vw]">
                     <Link to={route.LOGIN}>Log in</Link>

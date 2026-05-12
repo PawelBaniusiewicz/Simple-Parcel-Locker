@@ -4,6 +4,7 @@ import './index.css'
 import App from './App.tsx'
 import { createBrowserRouter, RouterProvider } from 'react-router'
 import * as routes from './constants/routes.ts'
+import PickUpPackage from './components/PickUpPackage/PickUpPackage.tsx'
 
 const router = createBrowserRouter([
   {
@@ -15,8 +16,8 @@ const router = createBrowserRouter([
     element: <div>My Packages</div>
   },
   {
-    path: routes.ORDER_PACKAGE,
-    element: <div>My Packages</div>
+    path: routes.PICK_UP_PACKAGE,
+    element: <PickUpPackage />
   }
 ])
 

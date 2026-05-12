@@ -5,7 +5,7 @@ function App() {
 
   return (
     <>
-    <div className='w-full flex justify-center'><TopBar /></div>
+      <div className='w-full flex justify-center'><TopBar /></div>
     </>
   )
 }
