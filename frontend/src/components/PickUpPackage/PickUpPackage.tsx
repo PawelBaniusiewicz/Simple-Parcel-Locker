@@ -27,7 +27,7 @@ export default function PickUpPackage(){
                                 value={phoneNumber}
                                 onChange={e => setPhoneNumber(e.target.value)}/>
                         </label>
-                        <input type="submit" className="border border-solid border-white w-[10vw] m-4" />
+                        <input type="submit" className="border border-solid border-white w-[10vw] m-4 hover:bg-white hover:text-black" />
                     </form>
                 </div>
             </div>
