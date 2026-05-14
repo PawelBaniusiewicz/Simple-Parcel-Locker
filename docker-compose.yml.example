@@ -33,9 +33,7 @@ services:
     ports:
       - "8000:8000"
     networks:
-      network-name:
-        aliases:
-          - alias-name
+      - network-name
 
   frontend-react:
     build:
