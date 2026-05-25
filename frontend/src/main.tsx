@@ -10,15 +10,17 @@ import Register from './components/screens/Unauthenticated/Register/Register.tsx
 const router = createBrowserRouter([
   {
     path: routes.HOME,
-    element: <App />
-  },
-  {
-    path: routes.MY_PACKAGES,
-    element: <div>My Packages</div>
-  },
-  {
-    path: routes.PICK_UP_PACKAGE,
-    element: <PickUpPackage />
+    element: <App />,
+    children: [
+      {
+        path: routes.MY_PACKAGES,
+        element: <div>My Packages</div>
+      },
+      {
+        path: routes.PICK_UP_PACKAGE,
+        element: <PickUpPackage />
+      }
+    ]
   },
   {
     path: routes.REGISTER,

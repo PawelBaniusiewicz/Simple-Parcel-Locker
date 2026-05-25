@@ -16,7 +16,7 @@ export default function TopBar(){
                     <Link to={route.LOGIN}>Log in</Link>
                 </div>
                 <div className="w-[20vw] md:w-[10vw] bg-indigo-600 text-white rounded-2xl mr-2 hover:bg-indigo-500">
-                    <Link to={route.REGISTER}>Sign up</Link>
+                    <Link to={route.REGISTER}><div className="w-full rounded-2xl">Sign up</div></Link>
                 </div>
             </div>
         </header>

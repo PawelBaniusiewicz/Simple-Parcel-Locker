@@ -1,4 +1,3 @@
-import TopBar from "../TopBar/TopBar"
 import { useState } from "react"
 
 export default function PickUpPackage(){
@@ -8,7 +7,6 @@ export default function PickUpPackage(){
 
     return (
         <>
-            <div className='w-full flex justify-center'><TopBar /></div>
             <div className="w-full h-auto flex justify-center">
                 <div className="bg-black w-[95vw] md:w-[80vw] lg:w-[70vw] rounded-xl">
                     <form className="flex flex-col text-white text-2xl">
