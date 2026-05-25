@@ -16,3 +16,7 @@ class UserService:
 
         if self.user_repository.find_by_email(register_user_dto.email):
             raise ValueError('Email already exists')
+
+        user_entity = register_user_dto.to_user_entity()
+        self.user_repository.save_or_update(user_entity)
+        return UserDto.from_user_entity(user_entity)
