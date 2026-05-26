@@ -65,8 +65,4 @@ def create_app() -> Flask:
         api = Api(app)
         api.add_resource(UserResource, "/api/register")
 
-        #TODO:
-        # 1. trzeba ogarnąć routes do rejestracji usera bo to co mam może być złe
-        # 2. Dokończyć nagranie 14 zacząć od 31 minuty
-        # 3. Sprawdzić czy to co zrobiłem działa
     return app

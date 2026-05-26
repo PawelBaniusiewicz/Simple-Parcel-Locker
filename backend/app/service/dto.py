@@ -15,7 +15,7 @@ class RegisterUserDto:
 
     def with_password(self, new_password: str) -> Self:
         return RegisterUserDto(
-            name=self.username,
+            name=self.name,
             email=self.email,
             password=new_password,
             password_confirmation=self.password_confirmation,
