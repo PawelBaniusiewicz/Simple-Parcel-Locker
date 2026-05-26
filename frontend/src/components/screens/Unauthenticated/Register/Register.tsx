@@ -25,15 +25,15 @@ export default function Register() {
                 navigate('/');
             } else {
                 setErrorMessage('Registration failed. Please try again.');
-            }
+            };
         } catch(error) {
-            let message
-            if (error instanceof Error) message = error.message
-            else message = String(error)
-            reportError({ message })
+            let message;
+            if (error instanceof Error) message = error.message;
+            else message = String(error);
+            reportError({ message });
         } finally {
             setIsLoading(false);
-        }
+        };
     };
 
     return (

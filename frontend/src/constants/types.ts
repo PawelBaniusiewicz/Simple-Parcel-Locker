@@ -3,4 +3,9 @@ export interface registerUserProps {
     email: string;
     password: string;
     phone_number: string;
-} 
+};
+
+export interface loginUserProps {
+    email: string;
+    password: string;
+};

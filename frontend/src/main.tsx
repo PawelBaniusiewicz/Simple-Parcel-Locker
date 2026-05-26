@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router'
 import * as routes from './constants/routes.ts'
 import PickUpPackage from './components/PickUpPackage/PickUpPackage.tsx'
 import Register from './components/screens/Unauthenticated/Register/Register.tsx'
+import Login from './components/screens/Unauthenticated/Login/Login.tsx'
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
   {
     path: routes.REGISTER,
     element: <Register />
+  },
+  {
+    path: routes.LOGIN,
+    element: <Login />
   }
 ])
 
