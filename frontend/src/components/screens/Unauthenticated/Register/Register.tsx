@@ -6,6 +6,7 @@ export default function Register() {
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [passwordConfirmation, setPasswordConfirmation] = useState<string>('');
     const [phoneNumber, setPhoneNumber] = useState<string>('');
     
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -19,7 +20,7 @@ export default function Register() {
         setIsLoading(true);
 
         try {
-            const data = await register(name, email, password, phoneNumber);
+            const data = await register(name, email, password, passwordConfirmation, phoneNumber);
             
             if (data) {
                 navigate('/');
@@ -75,6 +76,12 @@ export default function Register() {
                     <div>
                         <label className="block text-sm font-medium text-neutral-300 mb-1.5" htmlFor="password">Password</label>
                         <input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)}
+                            className="w-full px-4 py-3 rounded-xl border border-neutral-800 bg-[#141417] text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-[#4f46e5] focus:border-transparent transition-all duration-200"
+                            placeholder="••••••••" disabled={isLoading} />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-neutral-300 mb-1.5" htmlFor="password">Password Confirmation</label>
+                        <input id="password" type="password" required value={passwordConfirmation} onChange={(e) => setPasswordConfirmation(e.target.value)}
                             className="w-full px-4 py-3 rounded-xl border border-neutral-800 bg-[#141417] text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-[#4f46e5] focus:border-transparent transition-all duration-200"
                             placeholder="••••••••" disabled={isLoading} />
                     </div>

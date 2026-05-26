@@ -6,7 +6,7 @@ import * as routes from "../constants/routes"
 
 export const login = async (email: string, password: string) => {
     try {
-        const response = await apiClient.post<loginUserProps>(`${import.meta.env.REACT_APP_BASE_API_URL}${routes.LOGIN}`, {email, password});
+        const response = await apiClient.post<loginUserProps>(`${import.meta.env.VITE_APP_BASE_API_URL}${routes.LOGIN}`, {email, password});
         if (response.status === 200) {
             setCookie('email', response.data.email, { expires: 7, secure: true, sameSite: 'strict', path: '/'});
         };
