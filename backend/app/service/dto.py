@@ -26,7 +26,7 @@ class RegisterUserDto:
         return UserEntity(
             name=self.name,
             email=self.email,
-            password=self.password,
+            hashed_password=self.password,
             phone_number=self.phone_number,
             is_active=False,
         )
@@ -38,7 +38,7 @@ class RegisterUserDto:
             email=data['email'],
             password=data['password'],
             password_confirmation=data['password_confirmation'],
-            phone_number=data['phonr_number']
+            phone_number=data['phone_number']
         )
 
 
@@ -47,18 +47,21 @@ class UserDto:
     id: int
     name: str
     email: str
+    phone_number: str
 
     def to_dict(self) -> dict[str, int | str]:
         return {
             'id': self.id,
             'name': self.name,
             'email': self.email,
+            'phone_number': self.phone_number
         }
 
     @classmethod
     def from_user_entity(cls, user_entity: UserEntity) -> Self:
         return cls(
             user_entity.id,
-            user_entity.username,
+            user_entity.name,
             user_entity.email,
+            user_entity.phone_number
         )

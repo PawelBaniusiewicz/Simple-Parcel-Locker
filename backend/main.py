@@ -5,6 +5,8 @@ from flask_migrate import Migrate
 from app.db.configuration import sa
 from os import getenv
 from app.db.entity import ParcelLockerEntity, ParcelEntity, LockerEntity
+from app.routes.resource import UserResource
+from flask_restful import Api
 import logging
 
 def create_app() -> Flask:
@@ -34,4 +36,11 @@ def create_app() -> Flask:
 
         migrate = Migrate(app, sa)
 
+        api = Api(app)
+        api.add_resource(UserResource, "/api/register")
+
+        #TODO:
+        # 1. trzeba ogarnąć routes do rejestracji usera bo to co mam może być złe
+        # 2. Dokończyć nagranie 14 zacząć od 31 minuty
+        # 3. Sprawdzić czy to co zrobiłem działa
     return app

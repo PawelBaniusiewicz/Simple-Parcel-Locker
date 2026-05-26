@@ -73,4 +73,8 @@ class UserRepository(CrudREpositoryORM[UserEntity]):
     def find_by_email(email: str) -> UserEntity | None:
         return UserEntity.query.filter_by(email=email).first()
 
+    @staticmethod
+    def find_by_phone_number(phone_number: str) -> UserEntity | None:
+        return UserEntity.query.filter_by(phone_number=phone_number).first()
+
 user_repository = UserRepository(sa)
