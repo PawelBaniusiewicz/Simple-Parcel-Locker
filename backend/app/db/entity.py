@@ -30,6 +30,7 @@ class ParcelEntity(sa.Model):
     __tablename__ = 'parcels'
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    content: Mapped[str] = mapped_column(String(250), nullable=False)
     size: Mapped[Size] = mapped_column(nullable=False)
     tracking_number: Mapped[str] = mapped_column(String(10), nullable=False, unique=True)
     status: Mapped[Status] = mapped_column(nullable=False)
