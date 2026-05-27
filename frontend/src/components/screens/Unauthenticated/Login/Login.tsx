@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { login } from "../../../../api/userService";
+import * as route from "../../../../constants/routes"
 
 export default function Login() {
     const [email, setEmail] = useState<string>('');
@@ -20,7 +21,7 @@ export default function Login() {
                 const data = await login(email, password);
                 
                 if (data) {
-                    navigate('/');
+                    navigate(route.HOME);
                 } else {
                     setErrorMessage('Login failed. Please try again.');
                 }
@@ -35,7 +36,7 @@ export default function Login() {
         };
     return (
         <div className="flex h-screen items-center justify-center px-4 py-12 bg-[#09090b] text-white">
-            <div className="w-full max-w-md p-8 rounded-3xl border border-neutral-800 bg-[#0d0d10] shadow-2xl">
+            <div className="w-full max-w-md p-8 rounded-3xl border border-gray-600 bg-[#0d0d10] shadow-2xl">
                 
                 <div className="mb-8 text-center">
                     <h2 className="text-3xl font-semibold tracking-tight">Welcome back</h2>
@@ -70,8 +71,8 @@ export default function Login() {
                 </form>
 
                 <p className="mt-6 text-center text-sm text-neutral-400">
-                    Already have an account?{" "}
-                    <a href="/login" className="text-[#4f46e5] hover:underline font-medium">Log in</a>
+                    You don't have an account?{" "}
+                    <a href={route.REGISTER} className="text-[#4f46e5] hover:underline font-medium">Sign up</a>
                 </p>
             </div>
         </div>

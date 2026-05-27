@@ -4,7 +4,7 @@ import './index.css'
 import App from './App.tsx'
 import { createBrowserRouter, RouterProvider } from 'react-router'
 import * as routes from './constants/routes.ts'
-import PickUpPackage from './components/PickUpPackage/PickUpPackage.tsx'
+import PickUpParcel from './components/PickUpParcel/PickUpParcel.tsx'
 import Register from './components/screens/Unauthenticated/Register/Register.tsx'
 import Login from './components/screens/Unauthenticated/Login/Login.tsx'
 
@@ -18,8 +18,8 @@ const router = createBrowserRouter([
         element: <div>My Packages</div>
       },
       {
-        path: routes.PICK_UP_PACKAGE,
-        element: <PickUpPackage />
+        path: routes.PICK_UP_PARCEL,
+        element: <PickUpParcel />
       }
     ]
   },

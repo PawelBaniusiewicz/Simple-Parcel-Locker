@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { register } from "../../../../api/authService";
 import { useNavigate } from "react-router";
+import * as route from "../../../../constants/routes"
 
 export default function Register() {
     const [name, setName] = useState<string>('');
@@ -23,7 +24,7 @@ export default function Register() {
             const data = await register(name, email, password, passwordConfirmation, phoneNumber);
             
             if (data) {
-                navigate('/');
+                navigate(route.HOME);
             } else {
                 setErrorMessage('Registration failed. Please try again.');
             };
@@ -39,7 +40,7 @@ export default function Register() {
 
     return (
         <div className="flex h-screen items-center justify-center px-4 py-12 bg-[#09090b] text-white">
-            <div className="w-full max-w-md p-8 rounded-3xl border border-neutral-800 bg-[#0d0d10] shadow-2xl">
+            <div className="w-full max-w-md p-8 rounded-3xl border border-gray-600 bg-[#0d0d10] shadow-2xl">
                 
                 <div className="mb-8 text-center">
                     <h2 className="text-3xl font-semibold tracking-tight">Create an account</h2>
@@ -96,7 +97,7 @@ export default function Register() {
 
                 <p className="mt-6 text-center text-sm text-neutral-400">
                     Already have an account?{" "}
-                    <a href="/login" className="text-[#4f46e5] hover:underline font-medium">Log in</a>
+                    <a href={route.LOGIN} className="text-[#4f46e5] hover:underline font-medium">Log in</a>
                 </p>
             </div>
         </div>
