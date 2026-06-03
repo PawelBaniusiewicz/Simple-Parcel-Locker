@@ -1,14 +1,18 @@
 from flask import Flask
-from pathlib import Path
-from dotenv import load_dotenv
-from flask_migrate import Migrate
-from app.db.configuration import sa
-from os import getenv
-from app.db.entity import ParcelLockerEntity, ParcelEntity, LockerEntity
-from app.routes.resource import UserResource
 from flask_restful import Api
 from flask_cors import CORS
+from flask_migrate import Migrate
+
+from dotenv import load_dotenv
+from pathlib import Path
+from os import getenv
 import logging
+
+from app.db.entity import ParcelLockerEntity, ParcelEntity, LockerEntity, ActivationTokenEntity
+from app.routes.resource import UserResource, ActivationUserResource
+from app.mail.configuration import MailSender
+from app.db.configuration import sa
+
 
 logging.basicConfig(level=logging.INFO)
 
@@ -60,9 +64,27 @@ def create_app() -> Flask:
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
         sa.init_app(app)
 
-        migrate = Migrate(app, sa)
+        migrate = Migrate(app, sa, compare_type=True)
 
+        # -----------------------------------------------
+        # Configuring mail
+        # -----------------------------------------------
+        mail_settings = {
+            'MAIL_SERVER': getenv('MAIL_SERVER'),
+            'MAIL_PORT': int(getenv('MAIL_PORT', 465)),
+            'MAIL_USE_SSL': bool(getenv('MAIL_USE_SSL')),
+            'MAIL_USERNAME': getenv('MAIL_USERNAME'),
+            'MAIL_PASSWORD': getenv('MAIL_PASSWORD'),
+        }
+        app.config.update(mail_settings)
+        MailSender(app, getenv('MAIL_USERNAME'))
+
+
+        # -----------------------------------------------
+        # Configuring routes
+        # -----------------------------------------------
         api = Api(app)
         api.add_resource(UserResource, "/api/register")
+        api.add_resource(ActivationUserResource, '/api/register/activate')
 
     return app

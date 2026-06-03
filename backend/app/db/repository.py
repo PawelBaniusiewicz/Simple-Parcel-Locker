@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
+
 from flask_sqlalchemy import SQLAlchemy
 from .configuration import sa
-from .entity import UserEntity
 
+from .entity import UserEntity, ActivationTokenEntity
 
 class CrudRepository[T](ABC):
 
@@ -77,4 +78,14 @@ class UserRepository(CrudREpositoryORM[UserEntity]):
     def find_by_phone_number(phone_number: str) -> UserEntity | None:
         return UserEntity.query.filter_by(phone_number=phone_number).first()
 
+class ActivationTokenRepository(CrudREpositoryORM[ActivationTokenEntity]):
+    def __init__(self, db: SQLAlchemy):
+        super().__init__(db)
+
+    @staticmethod
+    def find_by_token(token: str) -> ActivationTokenEntity | None:
+        return ActivationTokenEntity.query.filter_by(token=token).first()
+
+
 user_repository = UserRepository(sa)
+activation_token_repository = ActivationTokenRepository(sa)

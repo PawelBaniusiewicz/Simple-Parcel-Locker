@@ -1,7 +1,8 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import Integer, String, DateTime, ForeignKey, Boolean
+from sqlalchemy import Integer, String, DateTime, ForeignKey, Boolean, BigInteger
 from .configuration import sa
 from ..models.enums import Status, Size, Roles
+import datetime
 
 
 class ParcelLockerEntity(sa.Model):
@@ -50,10 +51,23 @@ class UserEntity(sa.Model):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(32), nullable=False)
-    email: Mapped[str] = mapped_column(String(64), nullable=False, unique=True)
+    email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True)
     phone_number: Mapped[str] = mapped_column(String(9), nullable=False, unique=True)
     hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=False, server_default='0')
     role: Mapped[Roles] = mapped_column(nullable=False, default='user', server_default='user')
 
     parcels: Mapped[list[ParcelEntity]] = relationship(back_populates="reciver")
+
+class ActivationTokenEntity(sa.Model):
+    __tablename__ = 'activation_tokens'
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    token: Mapped[str] = mapped_column(String(255), nullable=False)
+    timestamp: Mapped[int] = mapped_column(BigInteger)
+
+    user_id: Mapped[int] = mapped_column(sa.ForeignKey('users.id'))
+    user: Mapped[UserEntity] = sa.relationship('UserEntity')
+
+    def is_active(self) -> bool:
+        return self.timestamp > datetime.datetime.now(datetime.UTC).timestamp()
