@@ -1,5 +1,5 @@
-import { Link } from "react-router"
-import * as route from '../../constants/routes.ts'
+import { Link } from "react-router";
+import * as route from '../../constants/routes.ts';
 
 export default function TopBar(){
     return (

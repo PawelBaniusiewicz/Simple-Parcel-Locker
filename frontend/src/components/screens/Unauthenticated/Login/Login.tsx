@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { login } from "../../../../api/userService";
-import * as route from "../../../../constants/routes"
+import * as route from "../../../../constants/routes";
 
 export default function Login() {
     const [email, setEmail] = useState<string>('');
@@ -37,7 +37,7 @@ export default function Login() {
     return (
         <div className="flex h-screen items-center justify-center px-4 py-12 bg-[#09090b] text-white">
             <div className="w-full max-w-md p-8 rounded-3xl border border-gray-600 bg-[#0d0d10] shadow-2xl">
-                
+                <div className="text-[#4f46e5]"><a href={route.HOME}>{"<- Back"}</a></div>
                 <div className="mb-8 text-center">
                     <h2 className="text-3xl font-semibold tracking-tight">Welcome back</h2>
                     <p className="mt-2 text-sm text-neutral-400">Log in to continue</p>

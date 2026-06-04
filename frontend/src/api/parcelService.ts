@@ -1,5 +1,5 @@
-import apiClient from "./apiClient"
-import * as route from "../constants/routes"
+import apiClient from "./apiClient";
+import * as route from "../constants/routes";
 
 export const pickUpParcel = async (pick_up_code: string, phone_number: string) => {
     try {

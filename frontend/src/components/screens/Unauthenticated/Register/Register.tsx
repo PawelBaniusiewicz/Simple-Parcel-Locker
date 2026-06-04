@@ -1,7 +1,6 @@
-import { useState } from "react"
+import { useState } from "react";
 import { register } from "../../../../api/authService";
-import { useNavigate } from "react-router";
-import * as route from "../../../../constants/routes"
+import * as route from "../../../../constants/routes";
 
 export default function Register() {
     const [name, setName] = useState<string>('');
@@ -12,8 +11,7 @@ export default function Register() {
     
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-    const navigate = useNavigate();
+    const [message, setMessage] = useState<string | null>(null);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -24,7 +22,7 @@ export default function Register() {
             const data = await register(name, email, password, passwordConfirmation, phoneNumber);
             
             if (data) {
-                navigate(route.HOME);
+                setMessage("We have sent an account activation link to your email address.")
             } else {
                 setErrorMessage('Registration failed. Please try again.');
             };
@@ -41,7 +39,7 @@ export default function Register() {
     return (
         <div className="flex h-screen items-center justify-center px-4 py-12 bg-[#09090b] text-white">
             <div className="w-full max-w-md p-8 rounded-3xl border border-gray-600 bg-[#0d0d10] shadow-2xl">
-                
+                <div className="text-[#4f46e5]"><a href={route.HOME}>{"<- Back"}</a></div>
                 <div className="mb-8 text-center">
                     <h2 className="text-3xl font-semibold tracking-tight">Create an account</h2>
                     <p className="mt-2 text-sm text-neutral-400">Get started with your ParcelLocker account</p>
@@ -49,6 +47,12 @@ export default function Register() {
                 {errorMessage && (
                     <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center">
                         {errorMessage}
+                    </div>
+                )}
+
+                {message && (
+                    <div className="mb-6 p-4 rounded-xl bg-green-500/10 border border-red-500/20 text-green-400 text-sm text-center">
+                        {message}
                     </div>
                 )}
 

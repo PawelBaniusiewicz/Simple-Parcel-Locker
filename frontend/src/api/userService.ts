@@ -1,7 +1,7 @@
 import type { loginUserProps } from "../constants/types";
 import apiClient from "./apiClient";
 import { setCookie } from "typescript-cookie";
-import * as routes from "../constants/routes"
+import * as routes from "../constants/routes";
 
 
 export const login = async (email: string, password: string) => {

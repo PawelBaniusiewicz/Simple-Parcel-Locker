@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router";
 import { pickUpParcel } from "../../api/parcelService";
-import * as route from "../../constants/routes"
+import * as route from "../../constants/routes";
 
 export default function PickUpParcel(){
     const [code, setCode] = useState<string>("");
@@ -24,7 +24,7 @@ export default function PickUpParcel(){
                     navigate(route.HOME);
                 } else {
                     setErrorMessage('The pickup failed. Incorrect verification code or phone number. Please try again.');
-                };
+                }
             } catch(error) {
                 let message;
                 if (error instanceof Error) message = error.message;
@@ -32,7 +32,7 @@ export default function PickUpParcel(){
                 reportError({ message });
             } finally {
                 setIsLoading(false);
-            };
+            }
         };
 
 
