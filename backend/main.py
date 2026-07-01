@@ -3,8 +3,6 @@ from flask_restful import Api
 from flask_cors import CORS
 from flask_migrate import Migrate
 
-from dotenv import load_dotenv
-from pathlib import Path
 from os import getenv
 import logging
 
