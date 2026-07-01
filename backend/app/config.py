@@ -47,3 +47,9 @@ mail_settings = {
     'MAIL_USERNAME': getenv('MAIL_USERNAME'),
     'MAIL_PASSWORD': getenv('MAIL_PASSWORD'),
 }
+
+# -----------------------------------------------
+# Activation Token
+# -----------------------------------------------
+ACTIVATION_TOKEN_EXPIRATION_TIME_IN_SECONDS = int(getenv('ACTIVATION_TOKEN_EXPIRATION_TIME_IN_SECONDS', '300'))
+ACTIVATION_TOKEN_LENGTH = int(getenv('ACTIVATION_TOKEN_LENGTH', '30'))

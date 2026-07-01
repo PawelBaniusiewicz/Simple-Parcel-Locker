@@ -5,5 +5,5 @@ import secrets
 class ActivationTokenService:
 
     @staticmethod
-    def generate_activation_token() -> str:
-        return secrets.token_urlsafe(32)
+    def generate_activation_token(lenght: int) -> str:
+        return secrets.token_urlsafe(lenght)

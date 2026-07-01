@@ -6,6 +6,10 @@ from app.mail.configuration import MailSender
 from .token_service import ActivationTokenService
 from app.db.repository import ActivationTokenRepository
 from app.db.entity import ActivationTokenEntity
+from app.config import (
+    ACTIVATION_TOKEN_EXPIRATION_TIME_IN_SECONDS,
+    ACTIVATION_TOKEN_LENGTH
+)
 from os import getenv
 import datetime
 import logging
@@ -35,8 +39,9 @@ class UserService:
             generate_password_hash(register_user_dto.password)
         ).to_user_entity()
         self.user_repository.save_or_update(user_entity)
-        timestamp = datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=5)
-        token = ActivationTokenService.generate_activation_token()
+        timestamp = (datetime.datetime.now(datetime.UTC) +
+                     datetime.timedelta(seconds=ACTIVATION_TOKEN_EXPIRATION_TIME_IN_SECONDS))
+        token = ActivationTokenService.generate_activation_token(ACTIVATION_TOKEN_LENGTH)
         user_id = user_entity.id
         self.activation_token_repository.save_or_update(ActivationTokenEntity(
             timestamp=timestamp.timestamp(),
