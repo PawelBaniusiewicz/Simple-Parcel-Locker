@@ -13,6 +13,12 @@ from app.routes.resource import UserResource, ActivationUserResource
 from app.mail.configuration import MailSender
 from app.db.configuration import sa
 
+from app.config import (
+    db_uri,
+    cors_config,
+    mail_settings
+)
+
 
 logging.basicConfig(level=logging.INFO)
 
@@ -20,46 +26,13 @@ def create_app() -> Flask:
     app = Flask(__name__)
     with app.app_context():
         # -----------------------------------------------
-        # Configuring environment variables
-        # -----------------------------------------------
-        ENV_FILE = '.env'
-        ENV_PATH = Path().cwd().absolute().joinpath(f'{ENV_FILE}')
-        load_dotenv(ENV_PATH)
-
-        # -----------------------------------------------
         # Configuring CORS
         # -----------------------------------------------
-        cors_config = {
-            'allow_headers': [
-                'accept',
-                'accept-encoding',
-                'authorization',
-                'content-type'
-            ],
-            'methods': [
-                'delete',
-                'get',
-                'post',
-                'patch',
-                'put',
-                'options'
-            ],
-            'origins': [
-                f'{getenv('CORS_ORIGIN')}'
-            ]
-        }
         CORS(app, resources={'/*': cors_config})
 
         # -----------------------------------------------
         # Configuring db connection & migrations
         # -----------------------------------------------
-
-        db_username = getenv('DB_USERNAME')
-        db_password = getenv('DB_PASSWORD')
-        db_name = getenv('DB_NAME')
-        db_port = getenv('DB_PORT')
-        db_hostname = getenv('DB_HOSTNAME')
-        db_uri = f"mysql+mysqldb://{db_username}:{db_password}@{db_hostname}:{db_port}/{db_name}"
         app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
         sa.init_app(app)
@@ -69,13 +42,6 @@ def create_app() -> Flask:
         # -----------------------------------------------
         # Configuring mail
         # -----------------------------------------------
-        mail_settings = {
-            'MAIL_SERVER': getenv('MAIL_SERVER'),
-            'MAIL_PORT': int(getenv('MAIL_PORT', 465)),
-            'MAIL_USE_SSL': bool(getenv('MAIL_USE_SSL')),
-            'MAIL_USERNAME': getenv('MAIL_USERNAME'),
-            'MAIL_PASSWORD': getenv('MAIL_PASSWORD'),
-        }
         app.config.update(mail_settings)
         MailSender(app, getenv('MAIL_USERNAME'))
 
