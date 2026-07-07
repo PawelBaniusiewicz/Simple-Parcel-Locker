@@ -53,3 +53,15 @@ mail_settings = {
 # -----------------------------------------------
 ACTIVATION_TOKEN_EXPIRATION_TIME_IN_SECONDS = int(getenv('ACTIVATION_TOKEN_EXPIRATION_TIME_IN_SECONDS', '300'))
 ACTIVATION_TOKEN_LENGTH = int(getenv('ACTIVATION_TOKEN_LENGTH', '30'))
+
+# -----------------------------------------------------------------------------------------
+# JWT Configuartion
+# -----------------------------------------------------------------------------------------
+JWT_CONFIG = {
+    'JWT_ISSUER': getenv('JWT_ISSUER'),
+    'JWT_AUTHTYPE': getenv('JWT_AUTHTYPE'),
+    'JWT_SECRET': getenv('JWT_SECRET'),
+    'JWT_ACCESS_MAX_AGE': getenv('JWT_ACCESS_MAX_AGE'),
+    'JWT_REFRESH_MAX_AGE': getenv('JWT_REFRESH_MAX_AGE'),
+    'JWT_PREFIX': getenv('JWT_PREFIX', 'Bearer '),
+}

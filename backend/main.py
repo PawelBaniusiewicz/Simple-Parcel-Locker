@@ -10,6 +10,7 @@ from app.db.entity import ParcelLockerEntity, ParcelEntity, LockerEntity, Activa
 from app.routes.resource import UserResource, ActivationUserResource
 from app.mail.configuration import MailSender
 from app.db.configuration import sa
+from app.config import JWT_CONFIG
 
 from app.config import (
     db_uri,
@@ -27,6 +28,11 @@ def create_app() -> Flask:
         # Configuring CORS
         # -----------------------------------------------
         CORS(app, resources={'/*': cors_config})
+
+        # -----------------------------------------------------------------------------------------
+        # JWT Configuartion
+        # -----------------------------------------------------------------------------------------
+        app.config.update(JWT_CONFIG)
 
         # -----------------------------------------------
         # Configuring db connection & migrations
