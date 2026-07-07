@@ -1,4 +1,4 @@
-from flask import request, make_response, current_app
+from flask import request, make_response, current_app, g
 from app.db.repository import user_repository
 from jwt import ExpiredSignatureError
 from functools import wraps
@@ -16,7 +16,6 @@ def authorize(roles: list[str] | None = None):
                 if not cookies:
                     return make_response({'message': 'Authorization failed'}, 401)
 
-
                 access_token = cookies.split(' ')[1]
                 decoded_access_token = jwt.decode(
                     access_token,
@@ -24,6 +23,7 @@ def authorize(roles: list[str] | None = None):
                     algorithms=[current_app.config['JWT_AUTHTYPE']]
                 )
                 user = user_repository.find_by_id(int(decoded_access_token['sub']))
+                g.current_user = user
 
                 if roles and str(user.role).lower() not in [role.lower() for role in roles]:
                     return make_response({'message': 'Access denied!'}, 403)
