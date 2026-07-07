@@ -8,6 +8,7 @@ import logging
 
 from app.db.entity import ParcelLockerEntity, ParcelEntity, LockerEntity, ActivationTokenEntity
 from app.routes.resource import UserResource, ActivationUserResource
+from app.routes.auth_resource import LoginResource, RefreshTokensResource
 from app.mail.configuration import MailSender
 from app.db.configuration import sa
 from app.config import JWT_CONFIG
@@ -56,5 +57,7 @@ def create_app() -> Flask:
         api = Api(app)
         api.add_resource(UserResource, "/api/register")
         api.add_resource(ActivationUserResource, '/api/register/activate')
+        api.add_resource(LoginResource, '/api/login')
+        api.add_resource(RefreshTokensResource, '/api/refresh')
 
     return app

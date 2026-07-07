@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import Integer, String, DateTime, ForeignKey, Boolean, BigInteger
+from werkzeug.security import check_password_hash
 from .configuration import sa
 from ..models.enums import Status, Size, Roles
 import datetime
@@ -58,6 +59,9 @@ class UserEntity(sa.Model):
     role: Mapped[Roles] = mapped_column(nullable=False, default='user', server_default='user')
 
     parcels: Mapped[list[ParcelEntity]] = relationship(back_populates="reciver")
+
+    def check_password(self, password: str) -> bool:
+        return check_password_hash(self.hashed_password, password)
 
 class ActivationTokenEntity(sa.Model):
     __tablename__ = 'activation_tokens'

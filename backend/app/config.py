@@ -22,7 +22,8 @@ cors_config = {
         'accept',
         'accept-encoding',
         'authorization',
-        'content-type'
+        'content-type',
+        'Access-Control-Allow-Credentials'
     ],
     'methods': [
         'delete',
@@ -34,7 +35,8 @@ cors_config = {
     ],
     'origins': [
         f'{getenv('CORS_ORIGIN')}'
-    ]
+    ],
+    'supports_credentials': True,
 }
 
 # -----------------------------------------------
