@@ -26,9 +26,6 @@ class UserService:
         if not register_user_dto.check_passwords():
             raise ValueError('Passwords are not correct')
 
-        if self.user_repository.find_by_name(register_user_dto.name):
-            raise ValueError('Username already exists')
-
         if self.user_repository.find_by_email(register_user_dto.email):
             raise ValueError('Email already exists')
 
