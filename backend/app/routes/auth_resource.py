@@ -59,6 +59,13 @@ class LoginResource(Resource):
 
         return response
 
+class LogoutResource(Resource):
+    def post(self) -> Response:
+        response = make_response({'message': 'Logged Out'}, 200)
+        response.delete_cookie('AccessToken')
+        response.delete_cookie('RefreshToken')
+        return response
+
 class RefreshTokensResource(Resource):
     def post(self) -> Response:
         refresh_token = request.cookies.get('RefreshToken')
