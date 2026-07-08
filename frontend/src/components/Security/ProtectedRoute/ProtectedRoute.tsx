@@ -10,5 +10,5 @@ export default function ProtectedRoute() {
         return <div className="w-full h-screen flex justify-center items-center text-white">Checking session...</div>;
     }
     
-    return isAuthenticated ? <Outlet /> : <Navigate to={`${import.meta.env.VITE_APP_BASE_API_URL}${LOGIN}`} replace />;
+    return isAuthenticated ? <Outlet /> : <Navigate to={`${LOGIN}`} replace />;
 }
