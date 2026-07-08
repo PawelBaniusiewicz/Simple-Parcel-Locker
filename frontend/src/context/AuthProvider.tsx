@@ -12,8 +12,8 @@ export default function AuthProvider({children}: {children: ReactNode}){
     const checkAuthStatus = useCallback(async () => {
         try {
             const response = await apiClient.get(`${import.meta.env.VITE_APP_BASE_API_URL}${USER_ME}`);
-            setUser(response.data);
-            setIsAuthenticated(true);
+            setUser(response.data.user);
+            setIsAuthenticated(response.data.isAuthenticated);
         } catch (error) {
             setUser(null);
             setIsAuthenticated(false);
