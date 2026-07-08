@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { login } from "../../../../api/userService";
 import * as route from "../../../../constants/routes";
+import { useAuth } from "../../../../hooks/useAuth";
 
 export default function Login() {
     const [email, setEmail] = useState<string>('');
@@ -12,6 +13,8 @@ export default function Login() {
 
     const navigate = useNavigate();
 
+    const { checkAuthStatus } = useAuth()
+
     const handleSubmit = async (e: React.FormEvent) => {
             e.preventDefault();
             setErrorMessage(null);
@@ -21,6 +24,7 @@ export default function Login() {
                 const data = await login(email, password);
                 
                 if (data) {
+                    await checkAuthStatus()
                     navigate(route.HOME);
                 } else {
                     setErrorMessage('Login failed. Please try again.');
