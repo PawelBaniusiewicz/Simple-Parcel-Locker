@@ -8,6 +8,8 @@ import PickUpParcel from './components/PickUpParcel/PickUpParcel.tsx';
 import Register from './components/screens/Unauthenticated/Register/Register.tsx';
 import Login from './components/screens/Unauthenticated/Login/Login.tsx';
 import ActivateAccount from './components/screens/Unauthenticated/Register/ActivateAccount/ActivateAccount.tsx';
+import AuthProvider from './context/AuthProvider.tsx';
+import ProtectedRoute from './components/Security/ProtectedRoute/ProtectedRoute.tsx';
 
 const router = createBrowserRouter([
   {
@@ -15,13 +17,19 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: routes.MY_PACKAGES,
-        element: <div>My Packages</div>
-      },
-      {
-        path: routes.PICK_UP_PARCEL,
-        element: <PickUpParcel />
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: routes.MY_PACKAGES,
+            element: <div>My Packages</div>
+          },
+          {
+            path: routes.PICK_UP_PARCEL,
+            element: <PickUpParcel />
+          }
+        ]
       }
+      
     ]
   },
   {
@@ -40,6 +48,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>,
 )
