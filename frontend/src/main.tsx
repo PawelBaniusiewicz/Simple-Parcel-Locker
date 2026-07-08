@@ -10,6 +10,7 @@ import Login from './components/screens/Unauthenticated/Login/Login.tsx';
 import ActivateAccount from './components/screens/Unauthenticated/Register/ActivateAccount/ActivateAccount.tsx';
 import AuthProvider from './context/AuthProvider.tsx';
 import ProtectedRoute from './components/Security/ProtectedRoute/ProtectedRoute.tsx';
+import GuestRoute from './components/Security/GuestRoute/GuestRoute.tsx';
 
 const router = createBrowserRouter([
   {
@@ -33,16 +34,21 @@ const router = createBrowserRouter([
     ]
   },
   {
-    path: routes.REGISTER,
-    element: <Register />
-  },
-  {
-    path: routes.ACTIVATE_ACCOUNT,
-    element: <ActivateAccount />
-  },
-  {
-    path: routes.LOGIN,
-    element: <Login />
+    element: <GuestRoute />,
+    children: [
+      {
+        path: routes.REGISTER,
+        element: <Register />
+      },
+      {
+        path: routes.ACTIVATE_ACCOUNT,
+        element: <ActivateAccount />
+      },
+      {
+        path: routes.LOGIN,
+        element: <Login />
+      }
+    ]
   }
 ])
 
