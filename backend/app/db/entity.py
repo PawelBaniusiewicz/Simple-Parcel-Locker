@@ -1,8 +1,10 @@
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import Integer, String, DateTime, ForeignKey, Boolean, BigInteger
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from werkzeug.security import check_password_hash
-from .configuration import sa
+
 from ..models.enums import Status, Size, Roles
+from .configuration import sa
+
 import datetime
 
 

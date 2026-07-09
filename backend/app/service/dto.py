@@ -1,6 +1,7 @@
 from dataclasses import dataclass
-from app.db.entity import UserEntity
 from typing import Self
+
+from app.db.entity import UserEntity
 
 @dataclass
 class RegisterUserDto:

@@ -1,11 +1,12 @@
 from flask import request, make_response, current_app, g
-
-from app.db.repository import user_repository
 from jwt import ExpiredSignatureError
 from functools import wraps
+
+from app.db.repository import user_repository
 from ..models.enums import Roles
-import logging
+
 import jwt
+import logging
 
 logging.basicConfig(level=logging.INFO)
 

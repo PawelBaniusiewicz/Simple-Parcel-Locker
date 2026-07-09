@@ -1,16 +1,18 @@
+from werkzeug.security import generate_password_hash
 from dataclasses import dataclass
+from os import getenv
+
+from app.db.repository import ActivationTokenRepository
+from .token_service import ActivationTokenService
+from app.db.entity import ActivationTokenEntity
+from app.mail.configuration import MailSender
 from ..db.repository import UserRepository
 from .dto import RegisterUserDto, UserDto
-from werkzeug.security import generate_password_hash
-from app.mail.configuration import MailSender
-from .token_service import ActivationTokenService
-from app.db.repository import ActivationTokenRepository
-from app.db.entity import ActivationTokenEntity
 from app.config import (
     ACTIVATION_TOKEN_EXPIRATION_TIME_IN_SECONDS,
     ACTIVATION_TOKEN_LENGTH
 )
-from os import getenv
+
 import datetime
 import logging
 

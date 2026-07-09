@@ -1,9 +1,8 @@
+from flask_sqlalchemy import SQLAlchemy
 from abc import ABC, abstractmethod
 
-from flask_sqlalchemy import SQLAlchemy
-from .configuration import sa
-
 from .entity import UserEntity, ActivationTokenEntity
+from .configuration import sa
 
 class CrudRepository[T](ABC):
 

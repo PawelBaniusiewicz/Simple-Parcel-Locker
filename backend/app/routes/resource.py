@@ -1,14 +1,11 @@
 from flask_restful import Resource, reqparse
-from flask import Response, g, make_response, request, current_app
+from flask import Response, make_response, request, current_app
 from jwt import ExpiredSignatureError
 
 from ..db.repository import user_repository
-from ..security.configuration import authorize
 from ..service.dto import RegisterUserDto
 from ..service.configuration import user_service
 
-
-import datetime
 import jwt
 
 class UserResource(Resource):

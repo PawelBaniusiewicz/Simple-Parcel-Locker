@@ -1,13 +1,12 @@
 from flask_restful import Resource, reqparse
 from flask import Response, make_response, current_app, request
-import logging
-import datetime
-import jwt
-from jwt import jwk_set_cache, ExpiredSignatureError, InvalidTokenError
+from jwt import ExpiredSignatureError, InvalidTokenError
 
 from app.db.repository import user_repository
 
-logging.basicConfig(level=logging.INFO)
+import datetime
+import jwt
+
 
 class LoginResource(Resource):
     parser = reqparse.RequestParser()
@@ -104,12 +103,7 @@ class RefreshTokensResource(Resource):
         refresh_token = jwt.encode(refresh_token_payload, current_app.config['JWT_SECRET'],
                                    algorithm=current_app.config['JWT_AUTHTYPE'])
 
-        # response = make_response({'message': 'Tokens have been successfully refreshed'})
-        response_body = {
-            'access_token': access_token,
-            'refresh_token': refresh_token
-        }
-        response = make_response(response_body, 201)
+        response = make_response({'message': 'Tokens have been successfully refreshed'}, 201)
         response.set_cookie('AccessToken', access_token, httponly=True)
         response.set_cookie('RefreshToken', refresh_token, httponly=True)
 
