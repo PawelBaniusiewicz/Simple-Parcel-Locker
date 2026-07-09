@@ -1,12 +1,17 @@
+from flask import Response, make_response, request, current_app, g
 from flask_restful import Resource, reqparse
-from flask import Response, make_response, request, current_app
 from jwt import ExpiredSignatureError
 
+from ..service.configuration import user_service, parcel_service
 from ..db.repository import user_repository
+from ..security.configuration import authorize
 from ..service.dto import RegisterUserDto
-from ..service.configuration import user_service
+from ..models.enums import Roles
 
+import logging
 import jwt
+
+logging.basicConfig(level=logging.INFO)
 
 class UserResource(Resource):
     parser = reqparse.RequestParser()
@@ -60,3 +65,13 @@ class UserMeResource(Resource):
 
         except Exception:
             return make_response({'isAuthenticated': False, 'user': None}, 200)
+
+
+class ParcelResource(Resource):
+
+    @authorize([Roles.ADMIN, Roles.USER])
+    def get(self) -> Response:
+        user = g.current_user
+        parcels = parcel_service.get_users_parcels(user.id)
+        return make_response({'parcels': [parcel for parcel in parcels]})
+
