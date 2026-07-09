@@ -3,12 +3,13 @@ from flask import request, make_response, current_app, g
 from app.db.repository import user_repository
 from jwt import ExpiredSignatureError
 from functools import wraps
+from ..models.enums import Roles
 import logging
 import jwt
 
 logging.basicConfig(level=logging.INFO)
 
-def authorize(roles: list[str] | None = None):
+def authorize(roles: list[Roles] | None = None):
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
@@ -25,7 +26,7 @@ def authorize(roles: list[str] | None = None):
                 user = user_repository.find_by_id(int(decoded_access_token['sub']))
                 g.current_user = user
 
-                if roles and str(user.role.value).lower() not in [role.lower() for role in roles]:
+                if roles and str(user.role.value).lower() not in [role.value.lower() for role in roles]:
                     return make_response({'message': 'Access denied!'}, 403)
 
             except ExpiredSignatureError:
