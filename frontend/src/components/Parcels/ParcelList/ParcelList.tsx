@@ -29,7 +29,6 @@ export default function ParcelList(){
         fetchData()
     }, [])
 
-    console.log(parcels.length)
     return (
         <div className="w-full max-w-4xl mx-auto px-4 py-8">
             <div className="mb-6 flex justify-between items-center">
