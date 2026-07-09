@@ -1,14 +1,27 @@
-from flask import Flask
+from flask_migrate import Migrate
 from flask_restful import Api
 from flask_cors import CORS
-from flask_migrate import Migrate
-
+from flask import Flask
 from os import getenv
 import logging
 
-from app.db.entity import ParcelLockerEntity, ParcelEntity, LockerEntity, ActivationTokenEntity
-from app.routes.auth_resource import LoginResource, RefreshTokensResource, LogoutResource
-from app.routes.resource import UserResource, ActivationUserResource, UserMeResource
+from app.db.entity import (
+    ParcelLockerEntity,
+    ParcelEntity,
+    LockerEntity,
+    ActivationTokenEntity
+)
+from app.routes.auth_resource import (
+    LoginResource,
+    RefreshTokensResource,
+    LogoutResource
+)
+from app.routes.resource import (
+    UserResource,
+    ActivationUserResource,
+    UserMeResource,
+    ParcelResource
+)
 from app.mail.configuration import MailSender
 from app.db.configuration import sa
 from app.config import JWT_CONFIG
@@ -61,5 +74,6 @@ def create_app() -> Flask:
         api.add_resource(RefreshTokensResource, '/api/refresh')
         api.add_resource(LoginResource, '/api/login')
         api.add_resource(LogoutResource, '/api/logout')
+        api.add_resource(ParcelResource, '/api/my_packages')
 
     return app

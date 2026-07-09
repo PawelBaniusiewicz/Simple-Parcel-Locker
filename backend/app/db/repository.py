@@ -1,9 +1,8 @@
+from flask_sqlalchemy import SQLAlchemy
 from abc import ABC, abstractmethod
 
-from flask_sqlalchemy import SQLAlchemy
+from .entity import UserEntity, ActivationTokenEntity, ParcelEntity
 from .configuration import sa
-
-from .entity import UserEntity, ActivationTokenEntity
 
 class CrudRepository[T](ABC):
 
@@ -86,6 +85,14 @@ class ActivationTokenRepository(CrudREpositoryORM[ActivationTokenEntity]):
     def find_by_token(token: str) -> ActivationTokenEntity | None:
         return ActivationTokenEntity.query.filter_by(token=token).first()
 
+class ParcelRepository(CrudREpositoryORM[ParcelEntity]):
+    def __init__(self, db: SQLAlchemy):
+        super().__init__(db)
+
+    @staticmethod
+    def find_all_parcels_by_user_id(user_id: int) -> list[ParcelEntity]:
+        return ParcelEntity.query.filter_by(users_id=user_id).all()
 
 user_repository = UserRepository(sa)
 activation_token_repository = ActivationTokenRepository(sa)
+parcel_repository = ParcelRepository(sa)

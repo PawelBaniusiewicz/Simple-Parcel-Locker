@@ -1,5 +1,6 @@
+from app.db.repository import activation_token_repository, user_repository, parcel_repository
+from .parcel_service import ParcelService
 from .user_service import UserService
-from ..db.repository import user_repository
-from app.db.repository import activation_token_repository
 
 user_service = UserService(user_repository, activation_token_repository)
+parcel_service = ParcelService(parcel_repository)

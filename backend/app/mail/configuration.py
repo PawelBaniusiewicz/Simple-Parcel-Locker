@@ -1,5 +1,5 @@
-from flask import Flask
 from flask_mail import Mail, Message
+from flask import Flask
 
 class MailSender:
     _mail = None

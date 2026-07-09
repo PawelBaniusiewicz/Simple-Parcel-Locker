@@ -17,5 +17,5 @@ class Status(enum.Enum):
 
 class Roles(enum.Enum):
     USER = 'user'
-    SUPPLIER = 'suplier'
+    SUPPLIER = 'supplier'
     ADMIN = 'admin'

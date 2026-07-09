@@ -1,6 +1,10 @@
 from dataclasses import dataclass
-from app.db.entity import UserEntity
-from typing import Self
+from typing import Self, Any
+
+from app.db.entity import UserEntity, ParcelEntity
+from ..models.enums import Size, Status
+
+import datetime
 
 @dataclass
 class RegisterUserDto:
@@ -64,4 +68,46 @@ class UserDto:
             user_entity.name,
             user_entity.email,
             user_entity.phone_number
+        )
+
+@dataclass
+class ParcelDto:
+    id: int
+    content: str
+    size: Size
+    tracking_number: str
+    status: Status
+    pickup_code: str
+    stored_at: datetime.datetime
+    created_at: datetime.datetime
+    locker_id: int
+    users_id: int
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            'id': self.id,
+            'content': self.content,
+            'size': self.size.value,
+            'tracking_number': self.tracking_number,
+            'status': self.status.value,
+            'pickup_code': self.pickup_code,
+            'stored_at': self.stored_at,
+            'created_at': self.created_at,
+            'locker_id': self.locker_id,
+            'user_id': self.users_id
+        }
+
+    @classmethod
+    def from_parcel_entity(cls, parcel_entity: ParcelEntity) -> Self:
+        return cls(
+            parcel_entity.id,
+            parcel_entity.content,
+            parcel_entity.size,
+            parcel_entity.tracking_number,
+            parcel_entity.status,
+            parcel_entity.pickup_code,
+            parcel_entity.stored_at,
+            parcel_entity.created_at,
+            parcel_entity.locker_id,
+            parcel_entity.users_id
         )
