@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router";
-import { pickUpParcel } from "../../../api/parcelService";
-import { HOME } from "../../../constants/routes";
+import { pickUpParcel } from "../../../../../api/parcelService";
+import { HOME } from "../../../../../constants/routes";
 
 export default function PickUpParcel(){
     const [code, setCode] = useState<string>("");

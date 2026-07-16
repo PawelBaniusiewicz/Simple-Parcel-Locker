@@ -1,6 +1,6 @@
-import apiClient from "../../../api/apiClient"
+import apiClient from "../../../../../api/apiClient";
 import { useEffect, useState } from "react"
-import { MY_PACKAGES } from "../../../constants/routes"
+import { MY_PACKAGES } from "../../../../../constants/routes";
 import type { Parcel } from "../ParcelRow/ParcelRow";
 import ParcelRow from "../ParcelRow/ParcelRow";
 
