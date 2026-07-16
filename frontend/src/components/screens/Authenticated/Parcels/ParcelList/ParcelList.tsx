@@ -9,23 +9,23 @@ export default function ParcelList(){
     const [parcels, setParcels] = useState<Parcel[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    const fetchData = async () => {
-        try {
-            setIsLoading(true);
-            const response = apiClient.get(`${import.meta.env.VITE_APP_BASE_API_URL}${MY_PACKAGES}`);
-            setParcels((await response).data.parcels);
-        } catch(error) {
-            setParcels([]);
-            setIsLoading(true);
-            let message;
-            if (error instanceof Error) message = error.message;
-            else message = String(error);
-            reportError({ message });
-        } finally {
-            setIsLoading(false);
-        }
-    }
     useEffect(() => {
+         const fetchData = async () => {
+            try {
+                setIsLoading(true);
+                const response = apiClient.get(`${import.meta.env.VITE_APP_BASE_API_URL}${MY_PACKAGES}`);
+                setParcels((await response).data.parcels);
+            } catch(error) {
+                setParcels([]);
+                setIsLoading(true);
+                let message;
+                if (error instanceof Error) message = error.message;
+                else message = String(error);
+                reportError({ message });
+            } finally {
+                setIsLoading(false);
+            }
+        }
         fetchData()
     }, [])
 

@@ -1,3 +1,5 @@
+import { createContext } from "react";
+
 export type User = {
     id: number;
     name: string;
@@ -8,5 +10,7 @@ export type User = {
 export type AuthContextType = {
     isAuthenticated: boolean | null;
     user: User | null;
-    checkAuthStatus: () => Promise<void>; 
+    checkAuthStatus: () => void; 
 };
+
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
