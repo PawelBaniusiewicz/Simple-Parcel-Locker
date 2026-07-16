@@ -3,6 +3,8 @@ from abc import ABC, abstractmethod
 
 from .entity import UserEntity, ActivationTokenEntity, ParcelEntity
 from .configuration import sa
+from ..models.enums import Status
+
 
 class CrudRepository[T](ABC):
 
@@ -92,6 +94,15 @@ class ParcelRepository(CrudREpositoryORM[ParcelEntity]):
     @staticmethod
     def find_all_parcels_by_user_id(user_id: int) -> list[ParcelEntity]:
         return ParcelEntity.query.filter_by(users_id=user_id).all()
+
+    def update_parcel_status(self, parcel_id: int, new_status: Status) -> ParcelEntity:
+        parcel = self.find_by_id(parcel_id)
+        if parcel:
+            parcel.status = new_status
+            self.save_or_update(parcel)
+            return parcel
+        else:
+            raise ValueError('Parcel not found')
 
 user_repository = UserRepository(sa)
 activation_token_repository = ActivationTokenRepository(sa)
