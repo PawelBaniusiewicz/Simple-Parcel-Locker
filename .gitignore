@@ -25,3 +25,10 @@ dist-ssr
 docker-compose.yml
 .env
 **/migrations/
+
+.venv/
+.venv
+
+__pycache__/
+*.pyc
+*.pyo
