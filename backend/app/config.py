@@ -1,6 +1,8 @@
 from dotenv import load_dotenv
 from os import getenv
 
+from app.models.enums import Status
+
 load_dotenv(override=True)
 
 # -----------------------------------------------
@@ -66,4 +68,19 @@ JWT_CONFIG = {
     'JWT_ACCESS_MAX_AGE': getenv('JWT_ACCESS_MAX_AGE'),
     'JWT_REFRESH_MAX_AGE': getenv('JWT_REFRESH_MAX_AGE'),
     'JWT_PREFIX': getenv('JWT_PREFIX', 'Bearer '),
+}
+
+# -----------------------------------------------
+# Configuration of subsequent parcel status states
+# -----------------------------------------------
+ALLOWED_TRANSITIONS = {
+    Status.LABEL_CREATED: [Status.PENDING],
+    Status.PENDING: [Status.IN_TRANSIT],
+    Status.IN_TRANSIT: [Status.IN_WAREHOUSE, Status.READY_FOR_PICKUP],
+    Status.IN_WAREHOUSE: [Status.OUT_FOR_DELIVERY],
+    Status.OUT_FOR_DELIVERY: [Status.READY_FOR_PICKUP],
+    Status.READY_FOR_PICKUP: [Status.DELIVERED, Status.EXPIRED],
+    Status.EXPIRED: [Status.RETURNED],
+    Status.DELIVERED: [],
+    Status.RETURNED: []
 }
