@@ -39,13 +39,13 @@ The application is fully containerized and consists of four main services:
 * [Docker](https://docs.docker.com/get-docker/)
 * [Docker Compose](https://docs.docker.com/compose/install/)
 
-### 1. Clone the repository
+## 1. Clone the repository
 ```bash
 git clone https://github.com/PawelBaniusiewicz/Simple-Parcel-Locker.git
 cd Simple-Parcel-Locker
 ```
 
-### 2. Environment Configuration
+## 2. Environment Configuration
 The project requires environment variables for both the frontend and backend. Example files are provided.
 
 **Backend Configuration:**
@@ -62,16 +62,68 @@ Create a .env file in the frontend directory based on the example:
 cp frontend/.env.example frontend/.env
 ```
 
-### 3. Docker Configuration
+## 3. Alternative A: Running Locally with uv (Backend Development)
+If you prefer to run or develop the Flask backend natively on your machine using uv instead of Docker:
+#### 1. Navigate to the backend directory:
+```bash
+cd backend
+```
+
+#### 2. Synchronize dependencies (this will automatically create a .venv virtual environment and install all required packages):
+```bash
+uv sync
+```
+
+#### 3. Configure your IDE (e.g., PyCharm / VS Code) to use the newly created virtual environment located at backend/.venv/bin/python or backend/.venv/Scripts/python as the project interpreter.
+
+## 4. Docker Configuration
 Rename the example Docker Compose file to activate it:
 ```bash
 cp docker-compose.yml.example docker-compose.yml
 ```
 
-### 4. Build and Run
+## 5. Build and Run
 Start the entire stack using Docker Compose:
 ```bash
 docker compose up -d --build
+```
+
+## 6. Database Initialization (Migrations)
+Before fully using the application, you must apply the database migrations to create the necessary tables in the MySQL database. Since the backend runs inside a Docker container, you need to execute the migration commands from within it.
+
+**Step-by-step approach:**
+1. List all running containers to find the exact name of your backend container (look for the one running the Flask API):
+```bash
+docker ps
+```
+2. Access the backend container's interactive shell (replace <backend_container_name> with the actual name from the previous step):
+```bash
+docker exec -it <container_id or container_name> bash
+```
+
+3. Initialize the migrations directory (using --app main to specify the entry point):
+```bash
+flask --app main db init
+```
+
+4. Generate the initial migration script based on your ORM models:
+```bash
+flask --app main db migrate -m "Initial migration"
+```
+
+5. Apply the migration to create the tables in the database:
+```bash
+flask --app main db upgrade
+```
+
+6. Type `exit` to leave the container shell.
+
+## 💡 Quick Alternative:
+If you know your backend service name in the docker-compose.yml file (e.g., backend-flask), you can run these commands directly from your host machine without entering the interactive shell sequentially:
+```bash
+docker compose exec <container_name> flask --app main db init
+docker compose exec <container_name> flask --app main db migrate -m "Initial migration"
+docker compose exec <container_name> flask --app main db upgrade
 ```
 
 **The services will be available at:**

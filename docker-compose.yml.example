@@ -9,7 +9,7 @@ services:
       MYSQL_DATABASE: db_name
       MYSQL_USER: username
       MYSQL_PASSWORD: user_password
-      MYSQL_TCP_PORT: 3007
+      MYSQL_TCP_PORT: 3307
     ports:
       - '3307:3307'
     expose:
