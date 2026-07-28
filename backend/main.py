@@ -20,7 +20,8 @@ from app.routes.resource import (
     UserResource,
     ActivationUserResource,
     UserMeResource,
-    ParcelResource
+    ParcelResource,
+    StatusResource
 )
 from app.mail.configuration import MailSender
 from app.db.configuration import sa
@@ -75,5 +76,6 @@ def create_app() -> Flask:
         api.add_resource(LoginResource, '/api/login')
         api.add_resource(LogoutResource, '/api/logout')
         api.add_resource(ParcelResource, '/api/my_packages')
+        api.add_resource(StatusResource, '/api/parcels/<int:parcel_id>/status')
 
     return app

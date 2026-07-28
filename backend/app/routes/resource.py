@@ -6,7 +6,7 @@ from ..service.configuration import user_service, parcel_service
 from ..db.repository import user_repository
 from ..security.configuration import authorize
 from ..service.dto import RegisterUserDto
-from ..models.enums import Roles
+from ..models.enums import Roles, Status
 
 import logging
 import jwt
@@ -74,4 +74,25 @@ class ParcelResource(Resource):
         user = g.current_user
         parcels = parcel_service.get_users_parcels(user.id)
         return make_response({'parcels': [parcel for parcel in parcels]})
+
+
+class StatusResource(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument('new_status', type=str, required=True)
+
+    @authorize([Roles.ADMIN, Roles.USER, Roles.SUPPLIER])
+    def patch(self, parcel_id: int) -> Response:
+        args = StatusResource.parser.parse_args()
+        new_status = args['new_status']
+        user = g.current_user
+        try:
+            enum_status = Status(new_status)
+            updated_parcel_dict = parcel_service.change_parcel_status(parcel_id, enum_status, user)
+            return make_response(updated_parcel_dict, 200)
+
+        except ValueError as e:
+            return make_response({'message': str(e)}, 400)
+
+
+
 
