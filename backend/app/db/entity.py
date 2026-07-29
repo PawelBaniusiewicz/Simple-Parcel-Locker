@@ -71,7 +71,6 @@ class UserEntity(sa.Model):
     is_active: Mapped[bool] = mapped_column(Boolean, default=False, server_default='0')
     role: Mapped[Roles] = mapped_column(nullable=False, default='user', server_default='user')
 
-    # parcels: Mapped[list[ParcelEntity]] = relationship(back_populates="reciver")
     sent_parcels: Mapped[list['ParcelEntity']] = relationship(
         foreign_keys="[ParcelEntity.sender_id]",
         back_populates="sender"

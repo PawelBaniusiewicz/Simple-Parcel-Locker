@@ -33,7 +33,7 @@ class CrudRepository[T](ABC):
         pass
 
 
-class CrudREpositoryORM[T: sa.Model](CrudRepository[T]):
+class CrudRepositoryORM[T: sa.Model](CrudRepository[T]):
 
     def __init__(self, db: SQLAlchemy) -> None:
         self.sa = db
@@ -63,7 +63,7 @@ class CrudREpositoryORM[T: sa.Model](CrudRepository[T]):
         self.sa.session.query(self.entity_type).delete()
         self.sa.session.commit()
 
-class UserRepository(CrudREpositoryORM[UserEntity]):
+class UserRepository(CrudRepositoryORM[UserEntity]):
     def __init__(self, db: SQLAlchemy):
         super().__init__(db)
 
@@ -79,7 +79,7 @@ class UserRepository(CrudREpositoryORM[UserEntity]):
     def find_by_phone_number(phone_number: str) -> UserEntity | None:
         return UserEntity.query.filter_by(phone_number=phone_number).first()
 
-class ActivationTokenRepository(CrudREpositoryORM[ActivationTokenEntity]):
+class ActivationTokenRepository(CrudRepositoryORM[ActivationTokenEntity]):
     def __init__(self, db: SQLAlchemy):
         super().__init__(db)
 
@@ -87,13 +87,13 @@ class ActivationTokenRepository(CrudREpositoryORM[ActivationTokenEntity]):
     def find_by_token(token: str) -> ActivationTokenEntity | None:
         return ActivationTokenEntity.query.filter_by(token=token).first()
 
-class ParcelRepository(CrudREpositoryORM[ParcelEntity]):
+class ParcelRepository(CrudRepositoryORM[ParcelEntity]):
     def __init__(self, db: SQLAlchemy):
         super().__init__(db)
 
     @staticmethod
-    def find_all_parcels_by_user_id(user_id: int) -> list[ParcelEntity]:
-        return ParcelEntity.query.filter_by(users_id=user_id).all()
+    def find_all_parcels_by_user_id(receiver_id: int) -> list[ParcelEntity]:
+        return ParcelEntity.query.filter_by(receiver_id=receiver_id).all()
 
     def update_parcel_status(self, parcel_id: int, new_status: Status) -> ParcelEntity:
         parcel = self.find_by_id(parcel_id)
