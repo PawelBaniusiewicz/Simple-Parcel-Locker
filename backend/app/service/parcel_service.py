@@ -7,7 +7,7 @@ from .dto import ParcelDto
 
 import logging
 
-from ..models.enums import Status
+from ..models.enums import Status, Roles
 from app.config import ALLOWED_TRANSITIONS
 
 logging.basicConfig(level=logging.INFO)
@@ -31,6 +31,25 @@ class ParcelService:
 
         if not parcel:
             raise ValueError("Cannot update parcel status - Parcel not found")
+
+        if user.role == Roles.USER:
+            if parcel.sender_id != user.id and parcel.receiver_id != user.id:
+                raise ValueError("Access denied: You do not have permission to modify this parcel.")
+
+            if new_status not in [Status.PENDING, Status.DELIVERED]:
+                raise ValueError(f"Access denied: Users cannot set status to '{new_status.value}'.")
+
+        elif user.role == Roles.SUPPLIER:
+            allowed_supplier_statuses = [
+                Status.IN_TRANSIT,
+                Status.IN_WAREHOUSE,
+                Status.OUT_FOR_DELIVERY,
+                Status.READY_FOR_PICKUP,
+                Status.EXPIRED,
+                Status.RETURNED
+            ]
+            if new_status not in allowed_supplier_statuses:
+                raise ValueError(f"Access denied: Suppliers cannot set status to '{new_status.value}'.")
 
         if new_status not in ALLOWED_TRANSITIONS[parcel.status]:
             raise ValueError("Cannot upgrade parcel status - Cannot change parcel status")

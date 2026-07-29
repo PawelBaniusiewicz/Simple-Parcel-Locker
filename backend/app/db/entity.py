@@ -45,9 +45,6 @@ class ParcelEntity(sa.Model):
     locker_id: Mapped[int] = mapped_column(ForeignKey("lockers.id"), nullable=True)
     locker: Mapped['LockerEntity'] = relationship(back_populates="parcel")
 
-    # reciver: Mapped['UserEntity'] = relationship(back_populates="parcels")
-    # users_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-
     sender_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     sender: Mapped['UserEntity'] = relationship(
         foreign_keys=[sender_id],
