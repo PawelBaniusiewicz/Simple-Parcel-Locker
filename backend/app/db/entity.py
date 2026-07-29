@@ -45,9 +45,20 @@ class ParcelEntity(sa.Model):
     locker_id: Mapped[int] = mapped_column(ForeignKey("lockers.id"), nullable=True)
     locker: Mapped['LockerEntity'] = relationship(back_populates="parcel")
 
-    reciver: Mapped['UserEntity'] = relationship(back_populates="parcels")
-    users_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    # reciver: Mapped['UserEntity'] = relationship(back_populates="parcels")
+    # users_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
 
+    sender_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    sender: Mapped['UserEntity'] = relationship(
+        foreign_keys=[sender_id],
+        back_populates="sent_parcels"
+    )
+
+    receiver_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    receiver: Mapped['UserEntity'] = relationship(
+        foreign_keys=[receiver_id],
+        back_populates="received_parcels"
+    )
 
 class UserEntity(sa.Model):
     __tablename__ = 'users'
@@ -60,7 +71,16 @@ class UserEntity(sa.Model):
     is_active: Mapped[bool] = mapped_column(Boolean, default=False, server_default='0')
     role: Mapped[Roles] = mapped_column(nullable=False, default='user', server_default='user')
 
-    parcels: Mapped[list[ParcelEntity]] = relationship(back_populates="reciver")
+    # parcels: Mapped[list[ParcelEntity]] = relationship(back_populates="reciver")
+    sent_parcels: Mapped[list['ParcelEntity']] = relationship(
+        foreign_keys="[ParcelEntity.sender_id]",
+        back_populates="sender"
+    )
+
+    received_parcels: Mapped[list['ParcelEntity']] = relationship(
+        foreign_keys="[ParcelEntity.receiver_id]",
+        back_populates="receiver"
+    )
 
     def check_password(self, password: str) -> bool:
         return check_password_hash(self.hashed_password, password)
