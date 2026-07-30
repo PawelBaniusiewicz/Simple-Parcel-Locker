@@ -42,7 +42,7 @@ class ParcelEntity(sa.Model):
     stored_at: Mapped[DateTime | None] = mapped_column(DateTime, nullable=True)
     created_at: Mapped[DateTime] = mapped_column(DateTime, nullable=False)
 
-    locker_id: Mapped[int] = mapped_column(ForeignKey("lockers.id"), nullable=True)
+    locker_id: Mapped[int | None] = mapped_column(ForeignKey("lockers.id"), nullable=True)
     locker: Mapped['LockerEntity'] = relationship(back_populates="parcel")
 
     sender_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
