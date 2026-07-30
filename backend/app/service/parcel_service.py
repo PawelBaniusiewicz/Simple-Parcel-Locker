@@ -1,14 +1,15 @@
 from dataclasses import dataclass
 from typing import Any
 
-from ..db.entity import UserEntity
 from ..db.repository import ParcelRepository, parcel_repository, user_repository, locker_repository
+from app.config import ALLOWED_TRANSITIONS
+from ..models.enums import Status, Roles
+from ..db.entity import UserEntity
 from .dto import ParcelDto
 
 import logging
+import datetime
 
-from ..models.enums import Status, Roles
-from app.config import ALLOWED_TRANSITIONS
 
 logging.basicConfig(level=logging.INFO)
 
@@ -63,6 +64,7 @@ class ParcelService:
                 raise ValueError("No free lockers available in the source parcel locker.")
 
             parcel.locker_id = free_locker.id
+            parcel.stored_at = datetime.datetime.now(datetime.UTC)
         elif new_status == Status.READY_FOR_PICKUP:
             free_locker = locker_repository.find_free_locker(
                 parcel_locker_id=parcel.destination_parcel_locker_id,
@@ -74,7 +76,8 @@ class ParcelService:
             parcel.locker_id = free_locker.id
         elif new_status in [Status.IN_TRANSIT, Status.DELIVERED]:
             parcel.locker_id = None
-            
+            parcel.stored_at = None
+
         new_parcel_status = parcel_repository.update_parcel_status(parcel_id, new_status)
 
         return ParcelDto.from_parcel_entity(new_parcel_status).to_dict()
