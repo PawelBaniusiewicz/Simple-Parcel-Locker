@@ -38,7 +38,7 @@ class ParcelEntity(sa.Model):
     size: Mapped[Size] = mapped_column(nullable=False)
     tracking_number: Mapped[str] = mapped_column(String(10), nullable=False, unique=True)
     status: Mapped[Status] = mapped_column(nullable=False)
-    pickup_code: Mapped[str] = mapped_column(String(6), unique=False)
+    pickup_code: Mapped[str | None] = mapped_column(String(6), unique=True, nullable=True)
     stored_at: Mapped[DateTime | None] = mapped_column(DateTime, nullable=True)
     created_at: Mapped[DateTime] = mapped_column(DateTime, nullable=False)
 
@@ -55,6 +55,16 @@ class ParcelEntity(sa.Model):
     receiver: Mapped['UserEntity'] = relationship(
         foreign_keys=[receiver_id],
         back_populates="received_parcels"
+    )
+
+    source_parcel_locker_id: Mapped[int] = mapped_column(ForeignKey("parcel_lockers.id"))
+    source_locker: Mapped['ParcelLockerEntity'] = relationship(
+        foreign_keys=[source_parcel_locker_id]
+    )
+
+    destination_parcel_locker_id: Mapped[int] = mapped_column(ForeignKey("parcel_lockers.id"))
+    destination_locker: Mapped['ParcelLockerEntity'] = relationship(
+        foreign_keys=[destination_parcel_locker_id]
     )
 
 class UserEntity(sa.Model):
