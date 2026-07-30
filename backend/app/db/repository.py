@@ -1,9 +1,9 @@
 from flask_sqlalchemy import SQLAlchemy
 from abc import ABC, abstractmethod
 
-from .entity import UserEntity, ActivationTokenEntity, ParcelEntity
+from .entity import UserEntity, ActivationTokenEntity, ParcelEntity, LockerEntity
 from .configuration import sa
-from ..models.enums import Status
+from ..models.enums import Status, Size
 
 
 class CrudRepository[T](ABC):
@@ -104,6 +104,24 @@ class ParcelRepository(CrudRepositoryORM[ParcelEntity]):
         else:
             raise ValueError('Parcel not found')
 
+class LockerRepository(CrudRepositoryORM[LockerEntity]):
+    def __init__(self, db: SQLAlchemy):
+        super().__init__(db)
+
+    @staticmethod
+    def find_free_locker(parcel_locker_id: int, size: Size) -> LockerEntity | None:
+        free_locker = (
+            LockerEntity.query
+            .outerjoin(ParcelEntity, ParcelEntity.locker_id == LockerEntity.id)
+            .filter(LockerEntity.parcel_locker_id == parcel_locker_id)
+            .filter(LockerEntity.size == size)
+            .filter(ParcelEntity.locker_id.is_(None))
+            .first()
+        )
+        return free_locker
+
+
 user_repository = UserRepository(sa)
 activation_token_repository = ActivationTokenRepository(sa)
 parcel_repository = ParcelRepository(sa)
+locker_repository = LockerRepository(sa)
