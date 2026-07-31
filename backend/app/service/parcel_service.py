@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from ..db.repository import ParcelRepository, parcel_repository, user_repository, locker_repository
+from .pickup_code_service import PickUpCodeService
 from app.config import ALLOWED_TRANSITIONS
 from ..models.enums import Status, Roles
 from ..db.entity import UserEntity
@@ -74,9 +75,11 @@ class ParcelService:
                 raise ValueError("No free lockers available in the destination parcel locker.")
 
             parcel.locker_id = free_locker.id
+            parcel.pickup_code = PickUpCodeService(parcel_repository).generate_pickup_code()
         elif new_status in [Status.IN_TRANSIT, Status.DELIVERED]:
             parcel.locker_id = None
             parcel.stored_at = None
+            parcel.pickup_code = None
 
         new_parcel_status = parcel_repository.update_parcel_status(parcel_id, new_status)
 

@@ -104,6 +104,9 @@ class ParcelRepository(CrudRepositoryORM[ParcelEntity]):
         else:
             raise ValueError('Parcel not found')
 
+    def find_by_pickup_code(self, pickup_code: str) -> ParcelEntity | None:
+        return self.sa.session.query(ParcelEntity).get(pickup_code)
+
 class LockerRepository(CrudRepositoryORM[LockerEntity]):
     def __init__(self, db: SQLAlchemy):
         super().__init__(db)
