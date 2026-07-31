@@ -3,9 +3,9 @@ from flask_restful import Resource, reqparse
 from jwt import ExpiredSignatureError
 
 from ..service.configuration import user_service, parcel_service
-from ..db.repository import user_repository
+from ..db.repository import user_repository, parcel_repository
 from ..security.configuration import authorize
-from ..service.dto import RegisterUserDto
+from ..service.dto import RegisterUserDto, ParcelDto
 from ..models.enums import Roles, Status
 
 import logging
@@ -94,5 +94,27 @@ class StatusResource(Resource):
             return make_response({'message': str(e)}, 400)
 
 
+class PickUpParcelResource(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument('phone_number', type=str, help='Phone number cannot be empty', required=True)
+    parser.add_argument('pickup_code', type=str, help='Pickup code cannot be empty', required=True)
 
+    @authorize([Roles.USER])
+    def post(self) -> Response:
+        args = PickUpParcelResource.parser.parse_args()
+        parcel = parcel_repository.find_parcel_by_phone_number_and_pickup_code(
+            args['phone_number'],
+            args['pickup_code']
+        )
+        logging.info(parcel)
+        if not parcel:
+            return make_response({'message': 'Parcel not found or incorrect data'}, 404)
+
+        try:
+            parcel_service.change_parcel_status(parcel.id, Status.DELIVERED, parcel.receiver)
+            return make_response(
+                {'message': 'Parcel picked up successfully', 'parcel': ParcelDto.to_dict(parcel)},
+                200)
+        except ValueError as e:
+            return make_response({'message': str(e)}, 400)
 

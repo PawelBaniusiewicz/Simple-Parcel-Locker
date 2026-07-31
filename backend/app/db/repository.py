@@ -107,6 +107,16 @@ class ParcelRepository(CrudRepositoryORM[ParcelEntity]):
     def find_by_pickup_code(self, pickup_code: str) -> ParcelEntity | None:
         return self.sa.session.query(ParcelEntity).get(pickup_code)
 
+    def find_parcel_by_phone_number_and_pickup_code(self, phone_number: str, pickup_code: str) -> ParcelEntity | None:
+        parcel = self.sa.session.query(ParcelEntity).join(
+            UserEntity,
+            ParcelEntity.receiver_id == UserEntity.id
+        ).where(
+            ParcelEntity.pickup_code == pickup_code,
+            UserEntity.phone_number == phone_number
+        ).first()
+        return parcel
+
 class LockerRepository(CrudRepositoryORM[LockerEntity]):
     def __init__(self, db: SQLAlchemy):
         super().__init__(db)
