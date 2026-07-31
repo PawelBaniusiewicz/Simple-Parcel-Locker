@@ -106,7 +106,6 @@ class PickUpParcelResource(Resource):
             args['phone_number'],
             args['pickup_code']
         )
-        logging.info(parcel)
         if not parcel:
             return make_response({'message': 'Parcel not found or incorrect data'}, 404)
 
