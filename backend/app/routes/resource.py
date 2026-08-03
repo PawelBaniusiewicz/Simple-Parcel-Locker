@@ -117,3 +117,42 @@ class PickUpParcelResource(Resource):
         except ValueError as e:
             return make_response({'message': str(e)}, 400)
 
+
+class SupplierBulkStatusResource(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument('tracking_numbers', type=str, action='append', help="List of parcels id cannot be empty")
+    parser.add_argument('status', type=str, help="Status cannot be empty")
+
+    @authorize([Roles.SUPPLIER])
+    def post(self) -> Response:
+        args = SupplierBulkStatusResource.parser.parse_args()
+        user = g.current_user
+
+        try:
+            target_status = Status(args['status'])
+        except ValueError:
+            return make_response({'message': f"Invalid status: {args['status']}"}, 400)
+        
+        success_count = 0
+        errors = []
+
+        for tracking_number in args['tracking_numbers']:
+            parcel = parcel_repository.find_by_tracking_number(tracking_number)
+
+            if not parcel:
+                errors.append({"tracking_number": tracking_number, "error": "Parcel not found in system."})
+                continue
+
+            try:
+                parcel_service.change_parcel_status(parcel.id, target_status, user)
+                success_count += 1
+            except ValueError as e:
+                errors.append({"tracking_number": tracking_number, "error": str(e)})
+
+        return make_response({
+            'message': f"Successfully updated {success_count} parcels."}
+                    if errors == [] else {
+                        'message': f"Successfully updated {success_count} parcels.",
+                        'errors': errors
+                    }
+            )

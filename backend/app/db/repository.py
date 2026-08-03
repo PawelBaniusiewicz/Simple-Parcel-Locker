@@ -95,6 +95,10 @@ class ParcelRepository(CrudRepositoryORM[ParcelEntity]):
     def find_all_parcels_by_user_id(receiver_id: int) -> list[ParcelEntity]:
         return ParcelEntity.query.filter_by(receiver_id=receiver_id).all()
 
+    @staticmethod
+    def find_by_tracking_number(tracking_number: str) -> ParcelEntity:
+        return ParcelEntity.query.filter_by(tracking_number=tracking_number).first()
+
     def update_parcel_status(self, parcel_id: int, new_status: Status) -> ParcelEntity:
         parcel = self.find_by_id(parcel_id)
         if parcel:
