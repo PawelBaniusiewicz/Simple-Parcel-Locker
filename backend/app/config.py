@@ -84,3 +84,13 @@ ALLOWED_TRANSITIONS = {
     Status.DELIVERED: [],
     Status.RETURNED: []
 }
+
+# -----------------------------------------------
+# Scheduler
+# -----------------------------------------------
+refresh = int(getenv('SCHEDULER_REFRESH_IN_MINUTES', 1))
+
+# --------------------------------------------------------------------------
+# Parcel expiration time
+# --------------------------------------------------------------------------
+parcel_expiration_time = int(getenv('PARCEL_EXPIRATION_TIME_IN_HOURS', 48))

@@ -76,7 +76,7 @@ class ParcelService:
 
             parcel.locker_id = free_locker.id
             parcel.pickup_code = PickUpCodeService(parcel_repository).generate_pickup_code()
-        elif new_status in [Status.IN_TRANSIT, Status.DELIVERED]:
+        elif new_status in [Status.IN_TRANSIT, Status.DELIVERED, Status.RETURNED]:
             parcel.locker_id = None
             parcel.stored_at = None
             parcel.pickup_code = None
@@ -84,4 +84,16 @@ class ParcelService:
         new_parcel_status = parcel_repository.update_parcel_status(parcel_id, new_status)
 
         return ParcelDto.from_parcel_entity(new_parcel_status).to_dict()
+
+    def expire_old_parcels(self) -> int:
+        expired_parcels = self.parcel_repository.find_parcels_to_expire()
+        count = 0
+
+        for parcel in expired_parcels:
+            parcel.status = Status.EXPIRED
+            parcel.pickup_code = None
+            count += 1
+
+        self.parcel_repository.save_or_update_many(expired_parcels)
+        return count
 

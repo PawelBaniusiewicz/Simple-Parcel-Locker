@@ -1,8 +1,11 @@
+from flask import current_app
 from flask_sqlalchemy import SQLAlchemy
 from abc import ABC, abstractmethod
+from datetime import datetime, timedelta, UTC
 
 from .entity import UserEntity, ActivationTokenEntity, ParcelEntity, LockerEntity
 from .configuration import sa
+from ..config import parcel_expiration_time
 from ..models.enums import Status, Size
 
 
@@ -120,6 +123,13 @@ class ParcelRepository(CrudRepositoryORM[ParcelEntity]):
             UserEntity.phone_number == phone_number
         ).first()
         return parcel
+
+    def find_parcels_to_expire(self) -> list[ParcelEntity]:
+        threshold_date = datetime.now(UTC) - timedelta(hours=parcel_expiration_time)
+        return self.sa.session.query(ParcelEntity).filter(
+            ParcelEntity.status == Status.READY_FOR_PICKUP,
+            ParcelEntity.stored_at <= threshold_date
+        ).all()
 
 class LockerRepository(CrudRepositoryORM[LockerEntity]):
     def __init__(self, db: SQLAlchemy):
