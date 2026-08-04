@@ -3,10 +3,10 @@ from flask_restful import Resource, reqparse
 from jwt import ExpiredSignatureError
 
 from ..service.configuration import user_service, parcel_service
-from ..db.repository import user_repository
+from ..db.repository import user_repository, parcel_repository
 from ..security.configuration import authorize
-from ..service.dto import RegisterUserDto
-from ..models.enums import Roles
+from ..service.dto import RegisterUserDto, ParcelDto
+from ..models.enums import Roles, Status
 
 import logging
 import jwt
@@ -75,3 +75,84 @@ class ParcelResource(Resource):
         parcels = parcel_service.get_users_parcels(user.id)
         return make_response({'parcels': [parcel for parcel in parcels]})
 
+
+class StatusResource(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument('new_status', type=str, required=True)
+
+    @authorize([Roles.ADMIN, Roles.USER, Roles.SUPPLIER])
+    def patch(self, parcel_id: int) -> Response:
+        args = StatusResource.parser.parse_args()
+        new_status = args['new_status']
+        user = g.current_user
+        try:
+            enum_status = Status(new_status)
+            updated_parcel_dict = parcel_service.change_parcel_status(parcel_id, enum_status, user)
+            return make_response(updated_parcel_dict, 200)
+
+        except ValueError as e:
+            return make_response({'message': str(e)}, 400)
+
+
+class PickUpParcelResource(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument('phone_number', type=str, help='Phone number cannot be empty', required=True)
+    parser.add_argument('pickup_code', type=str, help='Pickup code cannot be empty', required=True)
+
+    @authorize([Roles.USER])
+    def post(self) -> Response:
+        args = PickUpParcelResource.parser.parse_args()
+        parcel = parcel_repository.find_parcel_by_phone_number_and_pickup_code(
+            args['phone_number'],
+            args['pickup_code']
+        )
+        if not parcel:
+            return make_response({'message': 'Parcel not found or incorrect data'}, 404)
+
+        try:
+            parcel_service.change_parcel_status(parcel.id, Status.DELIVERED, parcel.receiver)
+            return make_response(
+                {'message': 'Parcel picked up successfully', 'parcel': ParcelDto.to_dict(parcel)},
+                200)
+        except ValueError as e:
+            return make_response({'message': str(e)}, 400)
+
+
+class SupplierBulkStatusResource(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument('tracking_numbers', type=str, action='append', help="List of parcels id cannot be empty")
+    parser.add_argument('status', type=str, help="Status cannot be empty")
+
+    @authorize([Roles.SUPPLIER])
+    def post(self) -> Response:
+        args = SupplierBulkStatusResource.parser.parse_args()
+        user = g.current_user
+
+        try:
+            target_status = Status(args['status'])
+        except ValueError:
+            return make_response({'message': f"Invalid status: {args['status']}"}, 400)
+        
+        success_count = 0
+        errors = []
+
+        for tracking_number in args['tracking_numbers']:
+            parcel = parcel_repository.find_by_tracking_number(tracking_number)
+
+            if not parcel:
+                errors.append({"tracking_number": tracking_number, "error": "Parcel not found in system."})
+                continue
+
+            try:
+                parcel_service.change_parcel_status(parcel.id, target_status, user)
+                success_count += 1
+            except ValueError as e:
+                errors.append({"tracking_number": tracking_number, "error": str(e)})
+
+        return make_response({
+            'message': f"Successfully updated {success_count} parcels."}
+                    if errors == [] else {
+                        'message': f"Successfully updated {success_count} parcels.",
+                        'errors': errors
+                    }
+            )

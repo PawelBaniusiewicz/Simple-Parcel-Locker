@@ -1,3 +1,4 @@
+from flask_apscheduler import APScheduler
 from flask_migrate import Migrate
 from flask_restful import Api
 from flask_cors import CORS
@@ -20,8 +21,12 @@ from app.routes.resource import (
     UserResource,
     ActivationUserResource,
     UserMeResource,
-    ParcelResource
+    ParcelResource,
+    StatusResource,
+    PickUpParcelResource,
+    SupplierBulkStatusResource
 )
+from app.scheduler.configuration import scheduler
 from app.mail.configuration import MailSender
 from app.db.configuration import sa
 from app.config import JWT_CONFIG
@@ -31,7 +36,6 @@ from app.config import (
     cors_config,
     mail_settings
 )
-
 
 logging.basicConfig(level=logging.INFO)
 
@@ -63,6 +67,13 @@ def create_app() -> Flask:
         app.config.update(mail_settings)
         MailSender(app, getenv('MAIL_USERNAME'))
 
+        # -----------------------------------------------
+        # Scheduler configuration
+        # -----------------------------------------------
+        app.config['SCHEDULER_API_ENABLED'] = True
+        scheduler.init_app(app)
+        scheduler.start()
+
 
         # -----------------------------------------------
         # Configuring routes
@@ -75,5 +86,8 @@ def create_app() -> Flask:
         api.add_resource(LoginResource, '/api/login')
         api.add_resource(LogoutResource, '/api/logout')
         api.add_resource(ParcelResource, '/api/my_packages')
+        api.add_resource(StatusResource, '/api/parcels/<int:parcel_id>/status')
+        api.add_resource(PickUpParcelResource, '/api/pickup_parcel')
+        api.add_resource(SupplierBulkStatusResource, '/api/courier/parcels/status')
 
     return app

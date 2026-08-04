@@ -1,8 +1,13 @@
+from flask import current_app
 from flask_sqlalchemy import SQLAlchemy
 from abc import ABC, abstractmethod
+from datetime import datetime, timedelta, UTC
 
-from .entity import UserEntity, ActivationTokenEntity, ParcelEntity
+from .entity import UserEntity, ActivationTokenEntity, ParcelEntity, LockerEntity
 from .configuration import sa
+from ..config import parcel_expiration_time
+from ..models.enums import Status, Size
+
 
 class CrudRepository[T](ABC):
 
@@ -31,7 +36,7 @@ class CrudRepository[T](ABC):
         pass
 
 
-class CrudREpositoryORM[T: sa.Model](CrudRepository[T]):
+class CrudRepositoryORM[T: sa.Model](CrudRepository[T]):
 
     def __init__(self, db: SQLAlchemy) -> None:
         self.sa = db
@@ -61,7 +66,7 @@ class CrudREpositoryORM[T: sa.Model](CrudRepository[T]):
         self.sa.session.query(self.entity_type).delete()
         self.sa.session.commit()
 
-class UserRepository(CrudREpositoryORM[UserEntity]):
+class UserRepository(CrudRepositoryORM[UserEntity]):
     def __init__(self, db: SQLAlchemy):
         super().__init__(db)
 
@@ -77,7 +82,7 @@ class UserRepository(CrudREpositoryORM[UserEntity]):
     def find_by_phone_number(phone_number: str) -> UserEntity | None:
         return UserEntity.query.filter_by(phone_number=phone_number).first()
 
-class ActivationTokenRepository(CrudREpositoryORM[ActivationTokenEntity]):
+class ActivationTokenRepository(CrudRepositoryORM[ActivationTokenEntity]):
     def __init__(self, db: SQLAlchemy):
         super().__init__(db)
 
@@ -85,14 +90,65 @@ class ActivationTokenRepository(CrudREpositoryORM[ActivationTokenEntity]):
     def find_by_token(token: str) -> ActivationTokenEntity | None:
         return ActivationTokenEntity.query.filter_by(token=token).first()
 
-class ParcelRepository(CrudREpositoryORM[ParcelEntity]):
+class ParcelRepository(CrudRepositoryORM[ParcelEntity]):
     def __init__(self, db: SQLAlchemy):
         super().__init__(db)
 
     @staticmethod
-    def find_all_parcels_by_user_id(user_id: int) -> list[ParcelEntity]:
-        return ParcelEntity.query.filter_by(users_id=user_id).all()
+    def find_all_parcels_by_user_id(receiver_id: int) -> list[ParcelEntity]:
+        return ParcelEntity.query.filter_by(receiver_id=receiver_id).all()
+
+    @staticmethod
+    def find_by_tracking_number(tracking_number: str) -> ParcelEntity:
+        return ParcelEntity.query.filter_by(tracking_number=tracking_number).first()
+
+    def update_parcel_status(self, parcel_id: int, new_status: Status) -> ParcelEntity:
+        parcel = self.find_by_id(parcel_id)
+        if parcel:
+            parcel.status = new_status
+            self.save_or_update(parcel)
+            return parcel
+        else:
+            raise ValueError('Parcel not found')
+
+    def find_by_pickup_code(self, pickup_code: str) -> ParcelEntity | None:
+        return self.sa.session.query(ParcelEntity).get(pickup_code)
+
+    def find_parcel_by_phone_number_and_pickup_code(self, phone_number: str, pickup_code: str) -> ParcelEntity | None:
+        parcel = self.sa.session.query(ParcelEntity).join(
+            UserEntity,
+            ParcelEntity.receiver_id == UserEntity.id
+        ).where(
+            ParcelEntity.pickup_code == pickup_code,
+            UserEntity.phone_number == phone_number
+        ).first()
+        return parcel
+
+    def find_parcels_to_expire(self) -> list[ParcelEntity]:
+        threshold_date = datetime.now(UTC) - timedelta(hours=parcel_expiration_time)
+        return self.sa.session.query(ParcelEntity).filter(
+            ParcelEntity.status == Status.READY_FOR_PICKUP,
+            ParcelEntity.stored_at <= threshold_date
+        ).all()
+
+class LockerRepository(CrudRepositoryORM[LockerEntity]):
+    def __init__(self, db: SQLAlchemy):
+        super().__init__(db)
+
+    @staticmethod
+    def find_free_locker(parcel_locker_id: int, size: Size) -> LockerEntity | None:
+        free_locker = (
+            LockerEntity.query
+            .outerjoin(ParcelEntity, ParcelEntity.locker_id == LockerEntity.id)
+            .filter(LockerEntity.parcel_locker_id == parcel_locker_id)
+            .filter(LockerEntity.size == size)
+            .filter(ParcelEntity.locker_id.is_(None))
+            .first()
+        )
+        return free_locker
+
 
 user_repository = UserRepository(sa)
 activation_token_repository = ActivationTokenRepository(sa)
 parcel_repository = ParcelRepository(sa)
+locker_repository = LockerRepository(sa)

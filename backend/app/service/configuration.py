@@ -1,4 +1,4 @@
-from app.db.repository import activation_token_repository, user_repository, parcel_repository
+from app.db.repository import activation_token_repository, user_repository, parcel_repository, locker_repository
 from .parcel_service import ParcelService
 from .user_service import UserService
 

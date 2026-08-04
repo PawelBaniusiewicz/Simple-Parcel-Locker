@@ -81,7 +81,8 @@ class ParcelDto:
     stored_at: datetime.datetime
     created_at: datetime.datetime
     locker_id: int
-    users_id: int
+    receiver_id: int
+    sender_id: int
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -94,7 +95,8 @@ class ParcelDto:
             'stored_at': self.stored_at,
             'created_at': self.created_at,
             'locker_id': self.locker_id,
-            'user_id': self.users_id
+            'receiver_id': self.receiver_id,
+            'sender_id': self.sender_id
         }
 
     @classmethod
@@ -109,5 +111,6 @@ class ParcelDto:
             parcel_entity.stored_at,
             parcel_entity.created_at,
             parcel_entity.locker_id,
-            parcel_entity.users_id
+            parcel_entity.receiver_id,
+            parcel_entity.sender_id
         )
