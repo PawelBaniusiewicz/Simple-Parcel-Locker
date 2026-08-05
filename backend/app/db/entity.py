@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, String, DateTime, ForeignKey, Boolean, BigInteger
+from sqlalchemy import Integer, String, DateTime, ForeignKey, Boolean, BigInteger, Float
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from werkzeug.security import check_password_hash
 
@@ -14,6 +14,9 @@ class ParcelLockerEntity(sa.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(30), nullable=False, unique=True)
     address: Mapped[str] = mapped_column(String(255), nullable=False, unique=True)
+
+    latitude: Mapped[float] = mapped_column(Float, nullable=False)
+    longitude: Mapped[float] = mapped_column(Float, nullable=False)
 
     lockers: Mapped[list['LockerEntity']] = relationship(back_populates="parcel_locker")
 
