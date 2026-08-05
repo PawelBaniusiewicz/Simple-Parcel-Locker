@@ -12,6 +12,7 @@ import AuthProvider from './context/AuthProvider.tsx';
 import ProtectedRoute from './components/Security/ProtectedRoute/ProtectedRoute.tsx';
 import GuestRoute from './components/Security/GuestRoute/GuestRoute.tsx';
 import ParcelList from './components/screens/Authenticated/Parcels/ParcelList/ParcelList.tsx';
+import SupplierDashboard from "./components/screens/Authenticated/Supplier/SupplierDashboard/SupplierDashboard.tsx";
 
 const router = createBrowserRouter([
   {
@@ -19,7 +20,7 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        element: <ProtectedRoute />,
+        element: <ProtectedRoute allowedRoles={["SUPPLIER", "USER", "ADMIN"]} />,
         children: [
           {
             path: routes.MY_PACKAGES,
@@ -30,8 +31,16 @@ const router = createBrowserRouter([
             element: <PickUpParcel />
           }
         ]
+      },
+      {
+        element: <ProtectedRoute allowedRoles={["SUPPLIER"]}/>,
+        children: [
+          {
+            path: routes.SUPPLIER_PARCELS,
+            element: <SupplierDashboard/>
+          }
+        ]
       }
-      
     ]
   },
   {

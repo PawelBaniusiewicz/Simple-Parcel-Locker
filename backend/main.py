@@ -88,6 +88,6 @@ def create_app() -> Flask:
         api.add_resource(ParcelResource, '/api/my_packages')
         api.add_resource(StatusResource, '/api/parcels/<int:parcel_id>/status')
         api.add_resource(PickUpParcelResource, '/api/pickup_parcel')
-        api.add_resource(SupplierBulkStatusResource, '/api/courier/parcels/status')
+        api.add_resource(SupplierBulkStatusResource, '/api/supplier/parcels/status')
 
     return app
