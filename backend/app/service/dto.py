@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Self, Any
 
-from app.db.entity import UserEntity, ParcelEntity, ParcelLockerEntity
+from app.db.entity import UserEntity, ParcelEntity, ParcelLockerEntity, LockerEntity
 from ..models.enums import Size, Status
 
 import datetime
@@ -141,3 +141,24 @@ class ParcelLockerDto:
             parcel_locker_entity.latitude,
             parcel_locker_entity.longitude
         )
+
+@dataclass
+class LockerDto:
+    id: int
+    size: Status
+    parcel_locker_id: int
+
+    @classmethod
+    def from_locker_entity(cls, locker_entity: LockerEntity) -> Self:
+        return cls(
+            locker_entity.id,
+            locker_entity.size,
+            locker_entity.parcel_locker_id
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            'id': self.id,
+            'size': self.size,
+            'parcel_locker_id': self.size
+        }
