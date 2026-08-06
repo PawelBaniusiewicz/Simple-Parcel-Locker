@@ -36,6 +36,20 @@ from app.config import (
     cors_config,
     mail_settings
 )
+from app.config import (
+    me,
+    login,
+    logout,
+    refresh_token,
+    register,
+    my_parcels,
+    activation_user,
+    parcel_statuses,
+    parcel_lockers,
+    pick_up_parcel,
+    suplier_parcels_status
+)
+
 
 logging.basicConfig(level=logging.INFO)
 
@@ -79,16 +93,16 @@ def create_app() -> Flask:
         # Configuring routes
         # -----------------------------------------------
         api = Api(app)
-        api.add_resource(UserResource, "/api/register")
-        api.add_resource(UserMeResource, '/api/me')
-        api.add_resource(ActivationUserResource, '/api/register/activate')
-        api.add_resource(RefreshTokensResource, '/api/refresh')
-        api.add_resource(LoginResource, '/api/login')
-        api.add_resource(LogoutResource, '/api/logout')
-        api.add_resource(ParcelResource, '/api/my_packages')
-        api.add_resource(StatusResource, '/api/parcels/<int:parcel_id>/status')
-        api.add_resource(PickUpParcelResource, '/api/pickup_parcel')
-        api.add_resource(SupplierBulkStatusResource, '/api/supplier/parcels/status')
-        api.add_resource(ParcelLockerResource, '/api/parcel-lockers')
+        api.add_resource(UserResource, register)
+        api.add_resource(UserMeResource, me)
+        api.add_resource(ActivationUserResource, activation_user)
+        api.add_resource(RefreshTokensResource, refresh_token)
+        api.add_resource(LoginResource, login)
+        api.add_resource(LogoutResource, logout)
+        api.add_resource(ParcelResource, my_parcels)
+        api.add_resource(StatusResource, parcel_statuses)
+        api.add_resource(PickUpParcelResource, pick_up_parcel)
+        api.add_resource(SupplierBulkStatusResource, suplier_parcels_status)
+        api.add_resource(ParcelLockerResource, parcel_lockers)
 
     return app

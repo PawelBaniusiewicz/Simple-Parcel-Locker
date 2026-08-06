@@ -102,3 +102,18 @@ parcel_expiration_time = int(getenv('PARCEL_EXPIRATION_TIME_IN_HOURS', 48))
 small_lockers = int(getenv('SMALL_LOCKERS', 10))
 medium_lockers = int(getenv('MEDIUM_LOCKERS', 10))
 large_lockers = int(getenv('LARGE_LOCKERS', 10))
+
+# -----------------------------------------------
+# URLs
+# -----------------------------------------------
+register = "/api/register"
+login = '/api/login'
+logout = '/api/logout'
+my_parcels = '/api/my_parcels'
+me = '/api/me'
+activation_user = '/api/register/activate'
+refresh_token = '/api/refresh'
+parcel_statuses = '/api/parcels/<int:parcel_id>/status'
+pick_up_parcel = '/api/pickup_parcel'
+suplier_parcels_status = '/api/supplier/parcels/status'
+parcel_lockers = '/api/parcel-lockers'
