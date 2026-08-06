@@ -24,7 +24,7 @@ from app.routes.resource import (
     ParcelResource,
     StatusResource,
     PickUpParcelResource,
-    SupplierBulkStatusResource
+    SupplierBulkStatusResource, ParcelLockerResource
 )
 from app.scheduler.configuration import scheduler
 from app.mail.configuration import MailSender
@@ -89,5 +89,6 @@ def create_app() -> Flask:
         api.add_resource(StatusResource, '/api/parcels/<int:parcel_id>/status')
         api.add_resource(PickUpParcelResource, '/api/pickup_parcel')
         api.add_resource(SupplierBulkStatusResource, '/api/supplier/parcels/status')
+        api.add_resource(ParcelLockerResource, '/api/parcel-lockers')
 
     return app

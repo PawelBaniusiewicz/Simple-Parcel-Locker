@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Self, Any
 
-from app.db.entity import UserEntity, ParcelEntity
+from app.db.entity import UserEntity, ParcelEntity, ParcelLockerEntity, LockerEntity
 from ..models.enums import Size, Status
 
 import datetime
@@ -114,3 +114,51 @@ class ParcelDto:
             parcel_entity.receiver_id,
             parcel_entity.sender_id
         )
+
+@dataclass
+class ParcelLockerDto:
+    id: int
+    name: str
+    address: str
+    latitude: float
+    longitude: float
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            'id': self.id,
+            'name': self.name,
+            'address': self.address,
+            'latitude': self.latitude,
+            'longitude': self.longitude
+        }
+
+    @classmethod
+    def from_parcel_locker_entity(cls, parcel_locker_entity: ParcelLockerEntity) -> Self:
+        return cls(
+            parcel_locker_entity.id,
+            parcel_locker_entity.name,
+            parcel_locker_entity.address,
+            parcel_locker_entity.latitude,
+            parcel_locker_entity.longitude
+        )
+
+@dataclass
+class LockerDto:
+    id: int
+    size: Status
+    parcel_locker_id: int
+
+    @classmethod
+    def from_locker_entity(cls, locker_entity: LockerEntity) -> Self:
+        return cls(
+            locker_entity.id,
+            locker_entity.size,
+            locker_entity.parcel_locker_id
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            'id': self.id,
+            'size': self.size.value,
+            'parcel_locker_id': self.parcel_locker_id
+        }

@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta, UTC
 
-from .entity import UserEntity, ActivationTokenEntity, ParcelEntity, LockerEntity
+from .entity import UserEntity, ActivationTokenEntity, ParcelEntity, LockerEntity, ParcelLockerEntity
 from .configuration import sa
 from ..config import parcel_expiration_time
 from ..models.enums import Status, Size
@@ -147,8 +147,15 @@ class LockerRepository(CrudRepositoryORM[LockerEntity]):
         )
         return free_locker
 
+class ParcelLockerRepository(CrudRepositoryORM[ParcelLockerEntity]):
+    def __init__(self, db: SQLAlchemy):
+        super().__init__(db)
+
+
+
 
 user_repository = UserRepository(sa)
 activation_token_repository = ActivationTokenRepository(sa)
 parcel_repository = ParcelRepository(sa)
 locker_repository = LockerRepository(sa)
+parcel_locker_repository = ParcelLockerRepository(sa)

@@ -2,10 +2,11 @@ from flask import Response, make_response, request, current_app, g
 from flask_restful import Resource, reqparse
 from jwt import ExpiredSignatureError
 
-from ..service.configuration import user_service, parcel_service
-from ..db.repository import user_repository, parcel_repository
+from ..db.entity import ParcelLockerEntity
+from ..service.configuration import user_service, parcel_service, parcel_locker_service
+from ..db.repository import user_repository, parcel_repository, parcel_locker_repository
 from ..security.configuration import authorize
-from ..service.dto import RegisterUserDto, ParcelDto
+from ..service.dto import RegisterUserDto, ParcelDto, ParcelLockerDto
 from ..models.enums import Roles, Status
 
 import logging
@@ -156,3 +157,52 @@ class SupplierBulkStatusResource(Resource):
                         'errors': errors
                     }
             )
+
+
+class ParcelLockerResource(Resource):
+    get_parser = reqparse.RequestParser()
+    get_parser.add_argument('id', type=int, location='args', required=False, help="Optional Parcel locker ID")
+
+    post_parser = reqparse.RequestParser()
+    post_parser.add_argument('name', type=str, required=True, help="Name cannot be null or empty")
+    post_parser.add_argument('address', type=str, required=True, help="Address cannot be null or empty")
+    post_parser.add_argument('latitude', type=float, required=True, help="Latitude cannot be null or empty")
+    post_parser.add_argument('longitude', type=float, required=True, help="Longitude cannot be null or empty")
+
+    def get(self) -> Response:
+        args = self.get_parser.parse_args()
+        parcel_locker_id = args.get('id')
+
+        try:
+            if parcel_locker_id:
+                parcel_locker = parcel_locker_service.get_parcel_locker_by_id(parcel_locker_id)
+                return make_response(parcel_locker.to_dict(), 200)
+            else:
+                parcel_lockers = parcel_locker_service.get_all_parcel_lockers()
+                return make_response([locker.to_dict() for locker in parcel_lockers], 200)
+
+        except ValueError as ve:
+            return make_response({"message": str(ve)}, 404)
+        except Exception as e:
+            return make_response({"message": f"Error fetching parcel lockers: {str(e)}"}, 500)
+
+    @authorize([Roles.ADMIN])
+    def post(self) -> Response:
+        args = self.post_parser.parse_args()
+
+        try:
+            new_locker_dto = parcel_locker_service.add_parcel_locker(
+                name=args['name'],
+                address=args['address'],
+                latitude=args['latitude'],
+                longitude=args['longitude']
+            )
+            return make_response({
+                "message": "Parcel locker created successfully",
+                "parcel_locker": new_locker_dto.to_dict()
+            }, 201)
+
+        except ValueError as ve:
+            return make_response({"message": str(ve)}, 400)
+        except Exception as e:
+            return make_response({"message": f"Error creating parcel locker: {str(e)}"}, 500)
