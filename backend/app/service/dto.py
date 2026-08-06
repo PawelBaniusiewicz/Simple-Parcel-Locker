@@ -159,6 +159,6 @@ class LockerDto:
     def to_dict(self) -> dict[str, Any]:
         return {
             'id': self.id,
-            'size': self.size,
-            'parcel_locker_id': self.size
+            'size': self.size.value,
+            'parcel_locker_id': self.parcel_locker_id
         }
