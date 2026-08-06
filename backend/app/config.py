@@ -94,3 +94,11 @@ refresh = int(getenv('SCHEDULER_REFRESH_IN_MINUTES', 1))
 # Parcel expiration time
 # --------------------------------------------------------------------------
 parcel_expiration_time = int(getenv('PARCEL_EXPIRATION_TIME_IN_HOURS', 48))
+
+
+# -----------------------------------------------
+# Configure the number of storage slots generated for the package locker
+# -----------------------------------------------
+small_lockers = int(getenv('SMALL_LOCKERS', 10))
+medium_lockers = int(getenv('MEDIUM_LOCKERS', 10))
+large_lockers = int(getenv('LARGE_LOCKERS', 10))
