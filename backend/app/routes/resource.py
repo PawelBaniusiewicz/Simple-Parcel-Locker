@@ -179,6 +179,8 @@ class ParcelLockerResource(Resource):
                 return make_response(parcel_locker.to_dict(), 200)
             else:
                 parcel_lockers = parcel_locker_service.get_all_parcel_lockers()
+                if not parcel_lockers:
+                    return make_response([])
                 return make_response([locker.to_dict() for locker in parcel_lockers], 200)
 
         except ValueError as ve:
