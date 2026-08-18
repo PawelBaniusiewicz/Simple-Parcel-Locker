@@ -3,46 +3,31 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import apiClient from "../../api/apiClient.ts";
 import L from 'leaflet';
 import { PARCEL_LOCKERS } from '../../constants/routes.ts'
+import type ParcelLocker from '../../constants/types.ts'
+import { DefaultIcon } from '../../constants/types.ts'
 
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-
-const DefaultIcon = L.icon({
-    iconUrl: icon,
-    shadowUrl: iconShadow,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-});
 L.Marker.prototype.options.icon = DefaultIcon;
-
-interface ParcelLocker {
-    id: number;
-    name: string;
-    address: string;
-    latitude: number;
-    longitude: number;
-}
 
 export default function ParcelLockerMap() {
     const [lockers, setLockers] = useState<ParcelLocker[]>([]);
     const [loading, setLoading] = useState(true);
 
-    const centerPosition: [number, number] = [52.0693, 19.4803];
+    const centerPosition: [number, number] = [
+        Number(import.meta.env.VITE_APP_CENTER_POSITION_X),
+        Number(import.meta.env.VITE_APP_CENTER_POSITION_Y)
+    ];
     const defaultZoom = 6;
 
     useEffect(() => {
         const fetchLockers = async () => {
             try {
                 const response = await apiClient.get(`${import.meta.env.VITE_APP_BASE_API_URL}${PARCEL_LOCKERS}`);
-                console.log("Co dokładnie przyszło z API?", response.data);
 
                 if (Array.isArray(response.data)) {
                     setLockers(response.data);
                 } else if (response.data && Array.isArray(response.data.parcel_lockers)) {
                     setLockers(response.data.parcel_lockers);
                 } else {
-                    console.error("Oczekiwano tablicy, otrzymano coś innego:", response.data);
                     setLockers([]);
                 }
                 setLockers(response.data);
