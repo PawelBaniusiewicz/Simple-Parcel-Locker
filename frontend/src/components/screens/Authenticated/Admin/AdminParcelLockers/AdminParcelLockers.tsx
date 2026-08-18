@@ -78,7 +78,7 @@ export default function AdminParcelLockers() {
     };
 
     return (
-        <div className="flex h-[calc(100vh-4rem)] bg-gray-100">
+        <div className="flex h-full w-full bg-purple-800">
             <div className="w-2/3 h-full p-4">
                 <MapContainer center={centerPosition} zoom={6} className="w-full h-full rounded-xl shadow-lg z-0">
                     <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
