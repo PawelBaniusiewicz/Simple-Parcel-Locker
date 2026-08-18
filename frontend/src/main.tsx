@@ -1,5 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { Navigate } from "react-router";
 import './index.css';
 import App from './App.tsx';
 import { createBrowserRouter, RouterProvider } from 'react-router';
@@ -13,12 +14,18 @@ import ProtectedRoute from './components/Security/ProtectedRoute/ProtectedRoute.
 import GuestRoute from './components/Security/GuestRoute/GuestRoute.tsx';
 import ParcelList from './components/screens/Authenticated/Parcels/ParcelList/ParcelList.tsx';
 import SupplierDashboard from "./components/screens/Authenticated/Supplier/SupplierDashboard/SupplierDashboard.tsx";
+import AdminParcelLockers from "./components/screens/Authenticated/Admin/AdminParcelLockers/AdminParcelLockers.tsx";
+import AdminDashboard from "./components/screens/Authenticated/Admin/AdminDashboard/AdminDashboard.tsx";
+import ParcelLockerMap from "./components/Map/ParcelLockersMap/ParcelLockersMap.tsx";
 
 const router = createBrowserRouter([
   {
-    path: routes.HOME,
     element: <App />,
     children: [
+      {
+        path: routes.HOME,
+        element: <ParcelLockerMap />
+      },
       {
         element: <ProtectedRoute allowedRoles={["SUPPLIER", "USER", "ADMIN"]} />,
         children: [
@@ -38,6 +45,24 @@ const router = createBrowserRouter([
           {
             path: routes.SUPPLIER_PARCELS,
             element: <SupplierDashboard/>
+          }
+        ]
+      },
+    ]
+  },
+  {
+    element: <ProtectedRoute allowedRoles={["ADMIN"]}/>,
+    children: [
+      {
+        element: <AdminDashboard />,
+        children: [
+          {
+            path: routes.ADMIN_PANEL,
+            element: <Navigate to={routes.ADMIN_PARCEL_LOCKERS} replace />
+          },
+          {
+            path: routes.ADMIN_PARCEL_LOCKERS,
+            element: <AdminParcelLockers />
           }
         ]
       }

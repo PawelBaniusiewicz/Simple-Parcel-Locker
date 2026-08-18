@@ -9,3 +9,5 @@ export const ACTIVATE_ACCOUNT = `${REGISTER}/activate`
 export const USER_ME = '/me'
 export const SUPPLIER_PARCELS = '/supplier/parcels/status'
 export const PARCEL_LOCKERS = '/parcel-lockers'
+export const ADMIN_PANEL = '/admin'
+export const ADMIN_PARCEL_LOCKERS = '/admin_parcels'
