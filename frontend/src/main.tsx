@@ -16,12 +16,16 @@ import ParcelList from './components/screens/Authenticated/Parcels/ParcelList/Pa
 import SupplierDashboard from "./components/screens/Authenticated/Supplier/SupplierDashboard/SupplierDashboard.tsx";
 import AdminParcelLockers from "./components/screens/Authenticated/Admin/AdminParcelLockers/AdminParcelLockers.tsx";
 import AdminDashboard from "./components/screens/Authenticated/Admin/AdminDashboard/AdminDashboard.tsx";
+import ParcelLockerMap from "./components/Map/ParcelLockersMap/ParcelLockersMap.tsx";
 
 const router = createBrowserRouter([
   {
-    path: routes.HOME,
     element: <App />,
     children: [
+      {
+        path: routes.HOME,
+        element: <ParcelLockerMap />
+      },
       {
         element: <ProtectedRoute allowedRoles={["SUPPLIER", "USER", "ADMIN"]} />,
         children: [
@@ -44,21 +48,21 @@ const router = createBrowserRouter([
           }
         ]
       },
+    ]
+  },
+  {
+    element: <ProtectedRoute allowedRoles={["ADMIN"]}/>,
+    children: [
       {
-        element: <ProtectedRoute allowedRoles={["ADMIN"]}/>,
+        element: <AdminDashboard />,
         children: [
           {
-            element: <AdminDashboard />,
-            children: [
-              {
-                path: routes.ADMIN_PANEL,
-                element: <Navigate to={routes.ADMIN_PARCEL_LOCKERS} replace />
-              },
-              {
-                path: routes.ADMIN_PARCEL_LOCKERS,
-                element: <AdminParcelLockers />
-              }
-            ]
+            path: routes.ADMIN_PANEL,
+            element: <Navigate to={routes.ADMIN_PARCEL_LOCKERS} replace />
+          },
+          {
+            path: routes.ADMIN_PARCEL_LOCKERS,
+            element: <AdminParcelLockers />
           }
         ]
       }

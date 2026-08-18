@@ -6,7 +6,7 @@ export default function AdminDashboard() {
     const { user } = useAuth();
 
     return (
-        <div className="flex h-screen bg-gray-50 font-sans">
+        <div className="flex h-screen text-slate-400 font-sans">
             <aside className="w-64 bg-slate-800 text-white flex flex-col shadow-xl z-20">
                 <div className="p-6 text-center border-b border-slate-700">
                     <h1 className="text-2xl font-black tracking-wider text-blue-400">ADMIN PANEL</h1>
@@ -50,13 +50,13 @@ export default function AdminDashboard() {
                 </div>
             </aside>
             <main className="flex-1 flex flex-col overflow-hidden relative">
-                <header className="bg-white shadow-sm border-b border-gray-200 z-10 px-8 py-4 flex justify-between items-center">
+                <header className="text-slate-400 shadow-sm border-b border-gray-200 z-10 px-8 py-4 flex justify-between items-center">
                     <h2 className="text-xl font-semibold text-gray-800">Management Panel</h2>
                     <div className="flex items-center text-sm text-gray-600">
                         Logged as: <span className="font-bold ml-1 text-blue-600">{user?.email || 'Admin'}</span>
                     </div>
                 </header>
-                <div className="flex-1 overflow-auto bg-gray-100">
+                <div className="flex-1 overflow-auto text-slate-400">
                     <Outlet />
                 </div>
             </main>

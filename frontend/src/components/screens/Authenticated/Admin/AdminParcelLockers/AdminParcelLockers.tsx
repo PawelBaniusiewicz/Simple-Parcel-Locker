@@ -78,7 +78,7 @@ export default function AdminParcelLockers() {
     };
 
     return (
-        <div className="flex h-full w-full bg-purple-800">
+        <div className="flex h-full w-full text-slate-400">
             <div className="w-2/3 h-full p-4">
                 <MapContainer center={centerPosition} zoom={6} className="w-full h-full rounded-xl shadow-lg z-0">
                     <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
@@ -95,7 +95,7 @@ export default function AdminParcelLockers() {
                     )}
                 </MapContainer>
             </div>
-            <div className="w-1/3 bg-white p-6 shadow-xl z-10 overflow-y-auto">
+            <div className="w-1/3 text-slate-400 p-6 shadow-xl z-10 overflow-y-auto">
                 <h2 className="text-2xl font-bold mb-6 text-gray-800">New Parcel Locker</h2>
 
                 {message && (
