@@ -13,7 +13,7 @@ import ProtectedRoute from './components/Security/ProtectedRoute/ProtectedRoute.
 import GuestRoute from './components/Security/GuestRoute/GuestRoute.tsx';
 import ParcelList from './components/screens/Authenticated/Parcels/ParcelList/ParcelList.tsx';
 import SupplierDashboard from "./components/screens/Authenticated/Supplier/SupplierDashboard/SupplierDashboard.tsx";
-import AdminParcelLockers from "./components/screens/Authenticated/Admin/AdminParcelLockers.tsx";
+import AdminParcelLockers from "./components/screens/Authenticated/Admin/AdminParcelLockers/AdminParcelLockers.tsx";
 
 const router = createBrowserRouter([
   {

@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import apiClient from "../../api/apiClient.ts";
+import apiClient from "../../../api/apiClient.ts";
 import L from 'leaflet';
-import { PARCEL_LOCKERS } from '../../constants/routes.ts'
-import type ParcelLocker from '../../constants/types.ts'
-import { DefaultIcon } from '../../constants/types.ts'
+import { PARCEL_LOCKERS } from '../../../constants/routes.ts'
+import type ParcelLocker from '../../../constants/types.ts'
+import { DefaultIcon } from '../../../constants/types.ts'
 
 L.Marker.prototype.options.icon = DefaultIcon;
 

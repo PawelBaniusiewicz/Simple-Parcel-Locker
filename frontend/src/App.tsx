@@ -1,7 +1,7 @@
 import './index.css'
 import TopBar from './components/TopBar/TopBar'
 import { Outlet } from 'react-router'
-import ParcelLockerMap from "./components/Map/ParcelLockersMap.tsx";
+import ParcelLockerMap from "./components/Map/ParcelLockersMap/ParcelLockersMap.tsx";
 
 function App() {
 
